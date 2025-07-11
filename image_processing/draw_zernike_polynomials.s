@@ -66,12 +66,13 @@ image CropImage( image input, number radius )
 	input = (iradius/radius > 1) ? 0 : input
 	return input
 }
-void SetDisplay( image img, number radius, image viridis )
+void SetDisplay( image &img, number radius, image viridis )
 {
 	CropImage( img, radius )
 	ShowImage( img )
 	ImageDisplay ImgDisp = img.ImageGetImageDisplay( 0 )
 	apply_LUT( ImgDisp, viridis )
+	return
 }
 
 // image size 
