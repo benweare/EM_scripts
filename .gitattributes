@@ -1,0 +1,2 @@
+*.s linguist-language=DigitalMicrograph
+*.s -linguist-detectable
