@@ -1,7 +1,6 @@
 %% Mean free path calculations 
 tic;
 %% Data
-%COF-5: take cross-section as that of carbon, density = 
 Atomic_weight=12/1000; %atomic weight of element, in kg per mol
 Avogad=6.02214076e23; %Avogadro's number, in atoms per mol
 density=(0.58002)*1000; %density of element, kg per m^-3

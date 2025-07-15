@@ -2,7 +2,7 @@
 
 A collection of various useful scripts, not associated with any particular publication. 
 
-Most scripts are for controlling TEMs via DigitalMicrograph (DM) scripting in DMScript and Python, with some image processing scripts, and a few other scripts that don't fall neatly into a category. 
+Most scripts are for controlling TEMs via DigitalMicrograph (DM) scripting in DMScript and Python, with some image processing scripts, and a few other scripts that don't fall neatly into a category. Anything in MATLAB is probably a legacy from my PhD.
 
 If you found these useful, please drop a reference in your work so others can benefit too.
 

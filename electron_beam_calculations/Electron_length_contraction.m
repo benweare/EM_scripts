@@ -1,4 +1,5 @@
 %% Length contraction for fast electrons
+% might be accurate, but was mostly for fun
 %% Variables 
 % Length at 0 velocity in metres
 LengthRest = 100e-9; 

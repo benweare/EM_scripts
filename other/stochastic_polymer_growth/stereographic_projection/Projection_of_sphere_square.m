@@ -1,5 +1,4 @@
 %% Projection of a sphere for Square Lattice
-
 set(0,'defaultfigurecolor',[1 1 1])
 set(gca,'FontName','Calibri')
 set(gca, 'linewidth', 2);

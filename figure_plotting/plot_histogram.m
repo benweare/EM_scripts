@@ -1,13 +1,8 @@
 %% Histogram plotter
 %cryst_1 is perpendicular to fringes, cryst_2 is parallel to fringes.
 %Choose which histograms you want to make. All distances are in nm.
-%x=BW101_1_Plus_crystal_planes.cryst_1;
-%y=BW068_2_Plus_crystal_planes.dspacing;
-%z=BW101_1_Plus_crystal_planes.cryst_2;
-%a=BW065_2_COF_GNF_crystal_planes.dspacing;
-%b=BW101_1_Plus_crystal_planes.dspacing;
-%c=Py_COF_d_spacing.PXRD;
-x=d_spacing_BW134_1.dspacingnm;
+
+x=data;
 hold on;
 %% Crystallite size histograms
 %histogram(x,'BinWidth',2);

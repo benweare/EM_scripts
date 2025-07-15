@@ -1,5 +1,4 @@
 %% Projection of a sphere
-
 %% Variables
 radius =12.7;
 

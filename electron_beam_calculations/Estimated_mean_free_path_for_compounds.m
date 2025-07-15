@@ -1,4 +1,6 @@
 %% Mean free path calculations 
+% estimating mean free path of a compound. 
+% results not validated as accurate, use with caution
 %Set the atomic percents (sum should be 1), and set the upper and lower
 %density limits. 
 % https://srdata.nist.gov/SRD64/Elastic

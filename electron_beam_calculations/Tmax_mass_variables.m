@@ -1,7 +1,6 @@
 %% Calculating Tmax for an element
 % (the maximum transferrable energy from an electron beam of energy X keV to an element)
 % Made by B Weare
-% CC-BY-SA
 %% For Loop Control
 x=1;
 R = zeros(length(x),1);

@@ -1,5 +1,5 @@
 %% Nanotube length loss linear model
-% This models length loss of nanotubes over time as a linear function using
+% This very simple model models length loss of nanotubes over time as a linear function using
 % normally distributed data. Input is a mean, standard deviation and sample
 % size
 
