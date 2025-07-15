@@ -4,29 +4,29 @@ Some code from my PhD for creating a model lattice stochastically, in the contex
 
 I haven't looked at this in a long time so can't speak to it being accurate and/or useful for it's original purpose. It if you need to generate a graph stochastically you can indeed use MATLAB, but nowdays I'd probably use Python. If you find a use for this code I'd be astounded, let me know.
 
-##Version 1:
+## Version 1:
 - Creates a graph using nodes of arbitary covalency without assigned coordinates
 
-##Version 2: 
+## Version 2: 
 - Creates a graph using nodes of arbitary covalency without assigned coordinates
 - Adds simple ring closing based on a walk between nodes
 
-##Version 3: 
+## Version 3: 
 - Adds absolute node coordinates, but nodes can be placed on top of one another
 
-#Version 4: 
+# Version 4: 
 - Stops nodes being places on top of each other by checking each new coordinate against all other coordinates
 -Much slower than v3, scales exponentially with number of nodes
 
-##Version 5:
+## Version 5:
 - Adds lookup tables to reduce scaling time
 - Can turn ring closing on and off
 - Can turn plotting on and off; off decreases sim time
 - Can turn on some statisitcal analysis of the dataset
-#Version 6:
+## Version 6:
 -3D model  that allows adsorption of nodes to form new stacked sheets
 
-##Version 7: 
+## Version 7: 
 -Can add extra nucleation points to have competing polymer growth
 -"Big nodes" to prevent stacking
 
@@ -50,16 +50,16 @@ I haven't looked at this in a long time so can't speak to it being accurate and/
 - 1-3 are up/down, 4-6 are left, 7-9 are right of the node, 10-12 are above, 13-15 are below
 - Coordinates are [x y z]
 
-#AvailNodesLUT: Available Nodes Lookup Table
+# AvailNodesLUT: Available Nodes Lookup Table
 - Lookup table of all nodes that can accept a covalent bond
 - Updates each cycle with which nodes can accept a bond
 
-#NodesLUT:
+# NodesLUT:
 - Starts as list of all nodes
 - Saturated nodes are removed during each cycle, so it is a master list of nodes that are unsaturated
 - Used to generate AvailNodesLUT at each step
 
-#List of variables:
+# List of variables:
 - min
 - max
 - adjacentNode
