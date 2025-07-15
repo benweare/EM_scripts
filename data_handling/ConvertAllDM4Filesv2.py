@@ -1,3 +1,4 @@
+# script to convert a list of DM4 files
 import glob
 import os
 from os import path
@@ -30,7 +31,7 @@ os.getcwd()
 os.listdir()
 pth = os.getcwd()
 pthA = pth + '\\*.dm4'
-list_of_files = glob.glob(pthA) # * means all if need specific format then *.dm4
+list_of_files = glob.glob(pthA) # * means all, if need specific format then *.dm4
 #print(list_of_files)
 
 #Process files routine
@@ -84,4 +85,3 @@ def ProcessFiles (list_of_files):
 ProcessFiles(list_of_files)
 
 print("done")
-

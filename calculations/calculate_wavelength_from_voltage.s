@@ -1,3 +1,5 @@
+// calculate wavelength in nm from accelerating voltage
+// pre-defined values for common voltages
 number CalcWavelength( number highTension )
 {
 	number lambda

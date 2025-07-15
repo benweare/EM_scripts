@@ -1,3 +1,4 @@
+// test to confirm if high tension can be controlled via script
 number test = (200-0.01)*1000
 
 Try{

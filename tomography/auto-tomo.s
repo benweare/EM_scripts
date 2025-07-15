@@ -1,9 +1,12 @@
 //Semi-automated tomography
 // does not use In-Situ camera mode
 // 27-06-25
-// set live time to desired exposure time
+//
+// Can clone images from Live View, or use CameraAcquireInPlace() 
+// Set live time to desired exposure time if cloning Live View
+// currently has no drift correction so set stage to eucentric height
+// metadata is recorded in a text file
 // to add: more image metadata, GUI, clean up
-//wasn't working going positive to negative
 
 // alpha at start in degrees
 number alpha_start = -50

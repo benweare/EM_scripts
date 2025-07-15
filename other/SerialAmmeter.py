@@ -1,7 +1,8 @@
 #Python Serial Communication
-#requires PySerial
+# Incomplete script to communicate with a picoammeter via a serial port
+# requires PySerial
 # python -m serial.tools.list_ports #list available ports
-#8 bits, parity = none, tx term = cr, flow = none, baud = 9600
+# 8 bits, parity = none, tx term = cr, flow = none, baud = 9600
 # 0x0D, 13 = /r
 # 0x0A, 10 = /n
 # terminate line with \n

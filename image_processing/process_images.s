@@ -1,8 +1,6 @@
 // Bulk Image Pre-Processing
 // 05-01-24
-// BLW & MWF @NMRC
 //
-// ED image processing to improve reflection identification
 // Processes all files in folder
 // User defines direct beam mask, smoothing kernel, and pixel mask threshold
 // 1 - masks direct beam 

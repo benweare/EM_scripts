@@ -5,6 +5,7 @@
 // Diffraction mode: centres the direct beam with PL shift
 // Must calibrate at each mag you want to use, and calibrate each time the underlying alignment is changed 
 // Calibrated range(s): 
+// NOTE: untested
 
 void BeamCoordinates( number &Shift_X, number &Shift_y )
 {

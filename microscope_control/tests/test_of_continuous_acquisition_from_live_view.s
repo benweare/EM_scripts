@@ -1,3 +1,6 @@
+// script to test cloning Live View in Digital Micrograph
+// tends to run slowly, giving poor temporal resolution and duty cycle 
+// collects 10 frames from Live View into a stack
 object NewData = NewSignal(0)
 object objListener = Alloc(ImageListener)
 

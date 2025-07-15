@@ -1,6 +1,6 @@
 // Chromatic aberration measurement
 // see 10.1073/pnas.2312905120
-// manually set whether add or substract HT at the moment
+// manually set whether add or subtract HT at the moment
 
 // values in kV
 number startHT = 200

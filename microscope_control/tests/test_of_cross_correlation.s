@@ -1,6 +1,6 @@
-// static image cross-correlation
-// add binning for improved speed?
-// based on DM website script for cross-correlation for drift measurement
+// test of cross-correlation function
+// add binning for improved speed
+// based on David Mitchell script for cross-correlation for drift measurement
 // 07-07-25
 // functions to create custom LUTs
 TagGroup CreateColEntry( number index, number r, number g, number b)

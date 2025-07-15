@@ -1,5 +1,4 @@
 // Counts all files regardless of type
-// Note DM counts IS frames from 0, and IS is systematically high by 1 due to control file
 // B L Weare, @NMRC 14-03-24
 
 TagGroup CreateFileList( string folder, number inclSubFolder )

@@ -2,7 +2,7 @@
 // 03-01-24
 // B L Weare, @NMRC
 // Moves the direct beam to the centre of the camera and draws circle around it
-// Untested
+// NOTE: Untested
 
 //Create ROI
 void CreateResRing( number radius, number x, number y, number r, number g, number b )

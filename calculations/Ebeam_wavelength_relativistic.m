@@ -1,6 +1,9 @@
 %% Calculating Relativisitic Wavelength for Accelerating Voltage
 % (the maximum transferrable energy from an electron beam of energy X keV to an element)
 % Wavelength formula from Williams and Carter (p13 2nd ed.)
+%
+% Output is a table of wavelength versus voltage, and a graph of the same
+%
 %% Script starts here
 x=1;
 R = zeros(length(x),1);

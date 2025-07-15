@@ -1,7 +1,7 @@
 // Target Centering
 // 12-12-23
 // B L Weare, @NMRC
-// Resolution Rings 
+// draws a ring in the centre of the image
 
 //Create ROI
 void CreateResRing( number radius, number x, number y, number r, number g, number b )

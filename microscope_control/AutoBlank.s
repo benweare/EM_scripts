@@ -1,8 +1,8 @@
 // AutoBlank for Fluence Experiements 
 // Made by B Weare @ nmRC
-// Please credit the author if you found this script useful
+// 
 // 10-05-24
-
+//
 // Notes:
 // Tested up to 5 mins successfully (300 s)
 // Printing to output can be supressed by commenting line 52

@@ -1,3 +1,5 @@
+// script to test how far image is shifted using beam shifts
+// takes image from Live View in Digital Micrograph, could also use image acquire commands
 image GetShiftedImage( number deltax, number deltay, number stagex, number stagey )
 {
 	EMSetImageShift( stagex + deltax, stagey + deltay )
