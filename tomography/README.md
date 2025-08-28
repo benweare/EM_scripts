@@ -2,10 +2,14 @@
 
 This script is used to capture tomography series automatically. It's main advantage is it faster than performing tomography manually, and requires no user input freeing you to do other tasks.
 
+This script is written in DigitalMicrograph Script, but could probably be rewritten in Python with a little effort. Please cite this repo if you found this script useful in your own work.
+
 ### Operation
 This script works by capturing an image at each discrete tilt step. At each step an image is captured and the stage tilt angle is recorded. The output is an image stack and a metadata file in CIF format (i.e. human readable).
 
 Image alignment during data collection is currently under development, using a cross-correlation approach. For best results, ensure your stage is set to eucentric height and the sample drift is minimal over the desired rotation range.
+
+This script has been tested successfully with a JEOL 2100Plus TEM and a JEOL 2100F TEM at the nmRC (Univeristy of Nottingham), and should work with any TEM using a Gatan camera. 
 
 ### Example
 
@@ -27,13 +31,6 @@ This script is based off of my diffraction tomography project, please see this r
 - Execute script. 
 - Review data: metadata file can be opened using a text editor.
 - Perform image alignment on data stack (e.g. via cross-correlaton). 
-
-### Testing
-It has been tested successfully with a JEOL 2100Plus TEM and a JEOL 2100F TEM, and should work with any TEM using a Gatan camera. 
-
-This script is written in DigitalMicrograph Script, but could probably be rewritten in Python with a little effort.
-
-Please cite this repo if you found this script useful in your own work.
 
 ### Citations
 Schindelin, J., Arganda-Carreras, I., Frise, E. et al. Fiji: an open-source platform for biological-image analysis. Nat Methods 9, 676–682 (2012). https://doi.org/10.1038/nmeth.2019 
