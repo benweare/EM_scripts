@@ -4,13 +4,13 @@
 
 ### 1D CTF
 
-<img src="https://github.com/benweare/EM_scripts/blob/main/assets/images/1d.png" alt="1d CTFs"/> 
+<img src="https://github.com/benweare/EM_scripts/blob/main/assets/images/1d.png" alt="1d CTFs" width=500 /> 
 
 This allows you to simulate 1D CTFs.
 
 ### 2D CTF
 
-<img src="https://github.com/benweare/EM_scripts/blob/main/assets/images/2d.png" alt="2d CTFs"/>
+<img src="https://github.com/benweare/EM_scripts/blob/main/assets/images/2d.png" alt="2d CTFs" width=500 />
 
 This allows you to simulate 2D CTFs.
 
