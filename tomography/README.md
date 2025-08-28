@@ -13,10 +13,9 @@ This script has been tested successfully with a JEOL 2100Plus TEM and a JEOL 210
 
 ### Example
 
-This tomography series was acquired of negative-stained extra-cellular vesicles: 
+This tomography series was acquired of negative-stained extra-cellular vesicles. The right image is the as-acquired series, and the left is after aligning and cropping to region of interest.
 
 <img src="https://github.com/benweare/EM_scripts/blob/main/assets/images/full.gif" alt="full" width="200"/> <img src="https://github.com/benweare/EM_scripts/blob/main/assets/images/extract.gif" alt="extract" width="200"/>
-Left: as-acquired tomography series. Right: stabilised and cropped.
 
 Images were acquired on a JEOL 2100Plus TEM at 200 kV accelerating voltage, with Gatan OneView camera in imaging mode ("I" mode) at 1 frame per second. Defocus was approximately -13 microns. The specimen was rotated 121&deg; in 2&deg; steps over 307 seconds. The images were acquired at 4k pixel resolution (pixel size = 0.45284 nm), then binned to 256x256 for cross-correlation. The images were aligned afrer acquisiton using cross-correlation in Digital Micrograph (v3.6), then had contrast enhanced and were saved in GIF format using FIJI (Schindelin et al. 2012). Extracellular vesicle suspensions (5 μL) were incubated on continuous carbon film coated Cu TEM grids (300 mesh, EM Resolutions) for 1 minute, then excess solution was wicked away with filter paper. UA-zero EM negative stain solution (3 μL, Agar Scientific, UK) was dropped onto the TEM grid, and wicked away after 1 minute. Grids were then left to dry for at least two hours prior to imaging.
 
