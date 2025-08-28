@@ -23,7 +23,6 @@ This allows you to simulate 1D CTFs and through-focus series. The modelled CTF i
  <img src="https://github.com/benweare/EM_scripts/blob/main/assets/images/TF.gif" alt="2d CTFs" width=200 />
 
 ### Operation
-
 Developed using Python 3, using Matplotlib and Numpy. CV2 is used for simulating 2D through-focus series.
 
 Variables:
@@ -33,6 +32,24 @@ Variables:
 - Spherical aberration
 - Chromatic aberration 
 - Two-fold astigmatism
+
+## CTF simulation
+If you can simualte a CTF, you can fit experimental data. This is useful for e.g. estimating defocus precisely (the microscope stage and the objective lens excitation add together to give the real defocus!).
+
+### Examples
+
+<img src="https://github.com/benweare/EM_scripts/blob/main/assets/images/1d_fitting.png" alt="2d CTFs" width=500 />
+
+Above are fitted 1D CTFs from a FEG TEM (left) and a LaB6 TEM (left). Strictly the FEG source is a Schottky source, but I won't tell if you don't. The fit estimated the defocus as -228 nm and -284 nm respectively, which was stable for spherical aberration over 1.0 - 2.0 mm. Fitting was easier for the FEG TEM due to the more coherent source giving rise to a greater number of sharper peaks to fit. CTF fitting for a LaB6 is possible but challenging. 
+
+<img src="https://github.com/benweare/EM_scripts/blob/main/assets/images/2d_fitting.png" alt="2d CTFs" width=500 />
+
+Above are fitted 2D CTFs from the same FEG TEM (left) and LaB6 TEM (left). There is significant two-fold astigmatism in the LaB6 CTF, which has been fitted reasonably well. I stigmated the lens on purpose for this example, but I'd always advise you don't do that when collecting data.
+
+Images for CTF fitting were acquired on a JEOL 2100Plus TEM with LaB6 source with Gatan OneView camera in imaging mode ("I" mode) at 1 frame per second, or a JEOL 2100F TEM with FEG source at 200 kV accelerating voltage with Gatan K3 camera imaging at 1 frame per second. The stage was set to neutral focus height, then defocus was controlled via the excitation of the objective lens. The images were acquired at 4k pixel resolution. The specimen was a amorphous carbon film on continuous carbon film coated Cu TEM grids (300 mesh, EM Resolutions). 2D CTFs were made by taking a Fourier transform of the image of the specimen, then converting to real 4-byte data using the log-modulus. 1D CTF were made by taking the radial average of the real-valued 2D CTF. Image processing was perfomed in Digital Micrograph (3.6), then saved as .tif files suitable for fitting using FIJI.
+
+### Operation
+Developed using Python 3, using Matplotlib and Numpy. Ski-kit Image was used to import images, and Lmfit was used to fit the CTFs. 
 
 
 ### Citations
