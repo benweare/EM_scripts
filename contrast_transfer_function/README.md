@@ -16,9 +16,9 @@ This allows you to simulate 1D CTFs and through-focus series. The modelled CTF i
 
 ### 2D CTF
 
-<img src="https://github.com/benweare/EM_scripts/blob/main/assets/images/2d.png" alt="2d CTFs" width=500 />
+<img src="https://github.com/benweare/EM_scripts/blob/main/assets/images/2d.png" alt="2d CTFs" width=500 /> <img src="https://github.com/benweare/EM_scripts/blob/main/assets/images/TF.gif" alt="2d CTFs" width=500 />
 
-2D CTFs can also be simulated, with a range of defocus and optical aberrations applied. 2D through-focus series can also be simulated.  
+2D CTFs can also be simulated, with a range of defocus and optical aberrations applied. 2D through-focus series can also be simulated (right).  
 
 ### Operation
 
