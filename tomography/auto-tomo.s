@@ -17,13 +17,13 @@ number alpha_step = 2
 // pause to acquire image in seconds
 number cam_sleep = 5
 
-string notes = "defocus -13.13 um"
-string operators = "ICZ/BLW"
+string notes = "e.g. defocus -10 um"
+string operators = "your name"
 string rotation_axis = "?"
 string program_name = "semi-auto-tomo"
 
-string save_dir = "X:\\ICZ\\Service Work\\Internal\\Rebecca Pope\\250627 EV mouse primary cell\\tomography\\" //directory to save log file
-string sample_name = "mouse_EV_tomography"
+string save_dir = "X:\\file\\path\\" //directory to save log file, with trailing slash
+string sample_name = "sample_name"
 string file_ext = ".txt"
 
 number camid = CameraGetActiveCameraID()
