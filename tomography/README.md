@@ -13,16 +13,17 @@ This tomography series was acquired of negative-stained extra-cellular vesicles:
 
 <img src="https://github.com/benweare/EM_scripts/blob/main/assets/images/full.gif" alt="full" width="200"/> <img src="https://github.com/benweare/EM_scripts/blob/main/assets/images/extract.gif" alt="extract" width="200"/>
 
-Tomography metadata was collected automatically and saved in CIF format.
+Images were acquired on a JEOL 2100Plus TEM at 200 kV accelerating voltage, with Gatan OneView camera in imaging mode ("I" mode) at 1 frame per second. The specimen was rotated 121&deg; in 2&deg; steps over 307 seconds. The images were acquired at 4k pixel resolution (pixel size = 0.45284 nm), then binned to 256x256 for cross-correlation. The images were aligned afrer acquisiton using cross-correlation in Digital Micrograph (v3.6), then had contrast enhanced and were saved in GIF format using FIJI (Schindelin et al. 2012). Extracellular vesicle suspensions (5 μL) were incubated on continuous carbon film coated Cu TEM grids (300 mesh, EM Resolutions) for 1 minute, then excess solution was wicked away with filter paper. UA-zero EM negative stain solution (3 μL, Agar Scientific, UK) was dropped onto the TEM grid, and wicked away after 1 minute. Grids were then left to dry for at least two hours prior to imaging.
 
-Images were acquired on a JEOL 2100Plus TEM at 200 kV accelerating voltage, with Gatan OneView camera in imaging mode ("I" mode). The specimen was rotated 121&deg; in 2&deg; steps over 307 seconds. The images were acquired at 4k pixel resolution (pixel size = 0.45284 nm), then binned to 256x256 for cross-correlation. The images were aligned afrer acquisiton using cross-correlation in Digital Micrograph (v3.6), then had contrast enhanced and were saved in GIF format using FIJI (Schindelin et al. 2012). Thanks to R Pope for making the specimen, and I Cardillo-Zallo for letting me acquire the data.
+Thanks to Rebecca Pope for making the specimen, and Ian Cardillo-Zallo for performing the negative stain.
 
 ### Step-by-step instructions
 
 This script is based off of my diffraction tomography project, please see this repo for more useful information about tomography and script useage: [GiveMeED](https://github.com/benweare/GiveMeED)
 
 - Set microscope stage to eucentric height. 
-- Set stage to desired starting angle. 
+- Set stage to desired starting angle.
+- Set the frame rate of the Live View to the desired camera exposure.
 - Execute script. 
 - Review data: metadata file can be opened using a text editor.
 - Perform image alignment on data stack (e.g. via cross-correlaton). 
