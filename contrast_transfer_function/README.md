@@ -60,15 +60,11 @@ Schindelin, J., Arganda-Carreras, I., Frise, E. et al. Fiji: an open-source plat
 ## Bibliography
 Learn more about CTFs here. I'd recommend starting with Williams and Carter before going on to Brydson. Uhlemann, Thust, and Krivanek were all helpful in deciphering the aberration function in a form understandable by myself and the computer.
 
-Williams DB, Carter CB. Transmission electron microscopy: a textbook for materials science. 2nd ed. New York: Springer; 2008. 
-
-Brydson R, editor. Aberration-corrected analytical transmission electron microscopy. Chichester, West Sussex: RMS-Wiley; 2011.
-
-Uhlemann S, Haider M. Residual wave aberrations in the first spherical aberration corrected transmission electron microscope. Ultramicroscopy. 1998 May;72(3–4):109–19. 
-
-Thust A, Overwijk MHF, Coene WMJ, Lentzen M. Numerical correction of lens aberrations in phase-retrieval HRTEM. Ultramicroscopy. 1996 Aug;64(1–4):249–64. 
-
-Krivanek OL, Dellby N, Lupini AR. Towards sub-Å electron beams. Ultramicroscopy. 1999 June;78(1–4):1–11. 
+- Williams DB, Carter CB. Transmission electron microscopy: a textbook for materials science. 2nd ed. New York: Springer; 2008. 
+- Brydson R, editor. Aberration-corrected analytical transmission electron microscopy. Chichester, West Sussex: RMS-Wiley; 2011.
+- Uhlemann S, Haider M. Residual wave aberrations in the first spherical aberration corrected transmission electron microscope. Ultramicroscopy. 1998 May;72(3–4):109–19. 
+- Thust A, Overwijk MHF, Coene WMJ, Lentzen M. Numerical correction of lens aberrations in phase-retrieval HRTEM. Ultramicroscopy. 1996 Aug;64(1–4):249–64. 
+- Krivanek OL, Dellby N, Lupini AR. Towards sub-Å electron beams. Ultramicroscopy. 1999 June;78(1–4):1–11. 
 
 
 
