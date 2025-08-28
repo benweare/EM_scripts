@@ -11,7 +11,7 @@ Image alignment during data collection is currently under development, using a c
 
 This tomography series was acquired of negative-stained extra-cellular vesicles: 
 
-![full](https://github.com/benweare/EM_scripts/blob/main/assets/images/full.gif) ![extract](https://github.com/benweare/EM_scripts/blob/main/assets/images/extract.gif)
+![full](https://github.com/benweare/EM_scripts/blob/main/assets/images/full.gif | width=200) ![extract](https://github.com/benweare/EM_scripts/blob/main/assets/images/extract.gif | width=200)
 
 Images were acquired on a JEOL 2100Plus TEM with Gatan OneView camera, at 200 kV accelerating voltage. The specimen was rotated 121 degrees in 2 degree steps over 307 seconds. The images were acquired at 4k pixel resolution then binned to 256x256 for display. The images were aligned afrer acquisiton using cross-correlation in Digital Micrograph, and saved in GIF format using ImageJ. Thanks to R Pope for making the specimen and I Cardillo-Zallo for helping me acquire the data.
 
