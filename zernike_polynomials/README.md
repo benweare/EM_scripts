@@ -26,14 +26,14 @@ Via Brydson 2011:
 
 | Radial Order | Azimuthal Order | Name | Krivanek Notation | Other Notation |
 | -------- | ------- | -------- | ------- | -------- |
-| 0 | 1  | Image shift | C~01~ |  |
-| 1 | 0  | Defocus | C~10~ | C~1~ |
-| 1 | 2  | Two-fold astigmatism | C~12~ | B~2~ |
-| 2 | 1  | Axial coma | C~21~ | |
-| 2 |  3 | Three-fold astigmatism | C~23~ | A~2~ |
-| 3 | 0  | Spherical | C~30~ | C~s~, C~3~ |
-| 3 | 2  | Axial star | C~32~ | S~2~ |
-| 3 |  4 | Four-fold astigmatism | C~34~ | A~3~ |
+| 0 | 1  | Image shift | C01 |  |
+| 1 | 0  | Defocus | C10 | C1 |
+| 1 | 2  | Two-fold astigmatism | C12 | A1 |
+| 2 | 1  | Axial coma | C21 | B2 |
+| 2 |  3 | Three-fold astigmatism | C23 | A2 |
+| 3 | 0  | Spherical | C30 | Cs, C3 |
+| 3 | 2  | Axial star | C32 | S2 |
+| 3 |  4 | Four-fold astigmatism | C34 | A3 |
 
 
 ### Optics 
