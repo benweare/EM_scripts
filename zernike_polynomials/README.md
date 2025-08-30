@@ -4,7 +4,7 @@ A  Jupyter Notebook and Digital Micrograph script for drawing Zernike polynomial
 
 <img src="https://github.com/benweare/EM_scripts/blob/main/assets/images/zernike.png" alt="full" width="500"/>
 
-In the context of TEM, Zernike polynomials can be used to describe the aberration function, where each polynomial corresponds to an optical aberration. The above diagram is labelled using the naming conventions for aberrations in electron microscopy, but I have also included "piston" which is not usually considered in TEM. The above diagram is organised according to azimuthal symmetry (increasing left to right) and radial symmetry (increasing top to bottom), which is indicated by the C~nm~ labels (Brydon 2011). I have omitted the aberrations with negative azimuthal symmetry from the diagram, but they are accounted for in the scripts. 
+In the context of TEM, Zernike polynomials can be used to describe the aberration function, where each polynomial corresponds to an optical aberration. The above diagram is labelled using the naming conventions for aberrations in electron microscopy, but I have also included "piston" which is not usually considered in TEM. The above diagram is organised according to azimuthal symmetry (increasing left to right) and radial symmetry (increasing top to bottom), which is indicated by the C<sub>nm<\sub> labels (Brydon 2011). I have omitted the aberrations with negative azimuthal symmetry from the diagram, but they are accounted for in the scripts. 
 
 Optical aberrations in TEM can be treated explicitly using the contrast transfer function scripts in this repo, but the Zernike polynomials make nice diagrams. You could also use them to make a model phase plate by summing them together. 
 
