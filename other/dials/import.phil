@@ -1,0 +1,35 @@
+geometry {
+  beam {
+    probe = x-ray *electron neutron
+    wavelength = 0.0251
+  }
+  detector {
+    panel {
+      name = "Gatan OneView"
+    }
+    panel {
+      material = "Si"
+    }
+    panel {
+      pixel_size = 0.015 0.015
+    }
+    panel {
+      image_size = 512 512
+    }
+    panel {
+      trusted_range = -1000000 4294967295
+    }
+    panel {
+      gain = 1
+    }
+    distance = 105
+    fast_slow_beam_centre = 250 240
+  }
+  goniometer {
+    axes = -0.656059 0.75471 0
+  }
+  scan {
+    oscillation = -50.0138 0.0486
+  }
+}
+
