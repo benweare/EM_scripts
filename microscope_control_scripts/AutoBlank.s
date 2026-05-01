@@ -1,14 +1,14 @@
-// AutoBlank for Fluence Experiements 
-// Made by B Weare @ nmRC
-// 
-// 10-05-24
-//
-// Notes:
-// Tested up to 5 mins successfully (300 s)
-// Printing to output can be supressed by commenting line 52
-// Rounds to nearest second
-// Pressing reset will also stop the run
-
+/*
+	AutoBlank for Fluence Experiements 
+	Made by B Weare @ nmRC 
+	10-05-24
+	
+	Notes:
+	Tested up to 5 mins successfully (300 s).
+	Printing to output can be supressed by commenting line 52.
+	Rounds to nearest second.
+	Pressing reset will also stop the run.
+*/
 // User Variables
 number countdown_time, rounded_time //in seconds
 number mean_flux = 0 //change this to flux in e- nm-2

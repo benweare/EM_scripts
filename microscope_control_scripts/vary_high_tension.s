@@ -1,6 +1,6 @@
-// Chromatic aberration measurement
-// see 10.1073/pnas.2312905120
-// manually set whether add or subtract HT at the moment
+/*
+	A script to vary the HT for Cc measurements.
+*/
 
 // values in kV
 number startHT = 200
@@ -155,6 +155,6 @@ Class data_collection_thread : thread //controls data collection
 	}
 }
 
-// Script starts here
+// Script starts here.
 Invoke( )
-//end
+// End.

@@ -1,7 +1,9 @@
-// Generate Zernike Polynomials
-// creates 2D images of Zernike polynomials, i.e. to illustrate geometric aberrations
-// for polynomial equations see e.g. https://doi.org/10.1117/12.294412 
-
+/*
+	A script to generate Zernike Polynomials
+	It creates 2D images of Zernike polynomials, 
+	i.e. to illustrate geometric aberrations. 
+	For polynomial equations see e.g. https://doi.org/10.1117/12.294412 
+*/
 TagGroup CreateColEntry( number index, number r, number g, number b)
 { 
  TagGroup entryTg = NewTagGroup()

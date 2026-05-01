@@ -1,4 +1,4 @@
-// Counts all files regardless of type
+// Script to count all files in a folder, regardless of type.
 // B L Weare, @NMRC 14-03-24
 
 TagGroup CreateFileList( string folder, number inclSubFolder )

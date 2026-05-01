@@ -1,13 +1,15 @@
-// Single Image Pre-Processing
-// 05-01-24
-// BLW @NMRC
-//
-// ED image processing to improve reflection identification
-// Processes a single image
-// User defines direct beam mask, smoothing kernel, and pixel mask threshold
-// 1 - masks direct beam 
-// 2 - smooths using defined kernel
-// 3 - removes pixel noise
+/* 
+  Single Image Pre-Processing
+  05-01-24
+  BLW @NMRC
+ 
+  ED image processing to improve reflection identification
+  Processes a single image
+  User defines direct beam mask, smoothing kernel, and pixel mask threshold
+  1 - masks direct beam 
+  2 - smooths using defined kernel
+  3 - removes pixel noise
+*/
 image smooth_image( image img, image kernel )
 {
 	image smoothed = convolution(img, kernel)

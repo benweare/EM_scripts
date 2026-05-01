@@ -74,10 +74,10 @@ void apply_LUT( imagedisplay &disp, image colour_matrix, number showLUT )
 	
 	return
 }
-// start
+// Start.
 number showLUT = 1
 image img = GetFrontImage()
 ShowImage(img)
 imageDisplay disp = img.ImageGetImageDisplay( 0 )
 apply_LUT( disp, viridis, showLUT )
-// end
+// End.

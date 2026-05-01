@@ -1,3 +1,4 @@
+# Example DIALS import.phil for 2100Plus at nmRC.
 geometry {
   beam {
     probe = x-ray *electron neutron
@@ -22,7 +23,7 @@ geometry {
     panel {
       gain = 1
     }
-    distance = 105
+    distance = 102
     fast_slow_beam_centre = 250 240
   }
   goniometer {
@@ -32,4 +33,3 @@ geometry {
     oscillation = -50.0138 0.0486
   }
 }
-
