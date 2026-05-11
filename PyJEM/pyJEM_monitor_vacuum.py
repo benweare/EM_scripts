@@ -14,17 +14,12 @@ import threading
 import time
 from datetime import datetime
 
-
 from PyJEM import TEM3
-
-
-TEM3.connect()
 
 class Main_Dialog:
     '''
     Dialogue class.
     '''
-    
     # Python constructor.
     def __init__(self, master):
         self.master = master
@@ -46,31 +41,44 @@ class Main_Dialog:
         self.ylim = [0, 200]
         self.x_data = [0]
         self.y_data = [0]
+
+        # Log file.
+        self.filename = 'unique_name.txt'
+        self.file = open( self.filename, 'x' )
+        self.file.write( 'Time, Elapsed(s), Peg0, Pig0, Pig1, Pig2, Pig3, Pig4, Pig5' )
         
         # create a button which will invoke a sub-dialog to provide a value
-        self.start_button = tk.Button(self.master, text = 'Start', padx=6, pady=3, command = self.start_monitoring_response)
-        self.stop_button = tk.Button(self.master, text = 'Stop', padx=6, pady=3, command = self.end_monitoring_response)
-        
+        self.start_button = tk.Button(self.master,
+                                        text = 'Start',
+                                        padx=6,
+                                        pady=3,
+                                        command = self.start_monitoring_response)
+        self.stop_button = tk.Button(self.master,
+                                        text = 'Stop',
+                                        padx=6,
+                                        pady=3,
+                                        command = self.end_monitoring_response)
         
         # Create a list of intervals with which to select the sampling time
         self.interval_label=tk.Label(self.master, text="Interval/s")
-        
         self.interval_list=['1','2','5', '10', '20', '30', '60', '120', '240']
-        
         self.interval_val=tk.IntVar()
         self.interval_default_val=1
         self.interval_val.set(self.interval_default_val)
-        
-        self.interval_selector=tk.OptionMenu(self.master, self.interval_val, *self.interval_list)
+        self.interval_selector=tk.OptionMenu(self.master,
+                                                self.interval_val,
+                                                *self.interval_list)
         self.interval_selector.config(width=1)
         self.interval_selector["state"]='normal'# state can be normal or disabled
-        
         
         # Create a field which displays the emission value. 
         self.mylabel=tk.Label(self.master, text= "Pressure: ")
         self.EmissionVal = tk.IntVar()
         self.EmissionVal.set(0) # default value
-        self.mainentry = tk.Entry(self.master,textvariable=self.EmissionVal, width=7, state="normal")
+        self.mainentry = tk.Entry(self.master,
+                                    textvariable=self.EmissionVal,
+                                    width=7,
+                                    state="normal")
         
         # Create a Matplotlib grpah.
         self.fig = matplotlib.figure.Figure(figsize = (3, 3), layout='tight', dpi = 100)
@@ -96,26 +104,14 @@ class Main_Dialog:
         # A flag for ending the thread
         self.terminate_thread_flag=0
         
-        # create an instance of the VACUUM3 module.
-        self.vac_module=TEM3.VACUUM3()
+        # Create an instance of the VACUUM3 module.
+        self.vaccuum=TEM3.VACUUM3()
         return
+
     
-    def _update_graph( self ):
-        self.plot1.clear()
-        self.plot1.plot( self.x_data, self.y_data )
-        self.plot1.set_ylim( self.ylim )
-        if ( self.x_data[0] == 0 ):
-            self.plot1.set_xlim( self.xlim )
-        else:
-            self.plot1.set_xlim([self.x_data[0], self.x_data[-1]])
-        self.plot1.set_ylabel( "Pressure" )
-        self.plot1.set_xlabel( "Live time / s" )
-        self.canvas.draw()
-        return
-    
-    # Python Destructor.
+    # Python destructor.
     def __del__(self):
-        self.terminate_thread_flag=1
+        self.terminate_thread_flag = 1
         return
     
     def _update_vals( self, interval, vac ):
@@ -128,42 +124,58 @@ class Main_Dialog:
             self.x_data.pop(0)
             self.y_data.pop(0)
         return
+
+    def _update_graph( self ):
+        '''
+        Update the graph.
+        '''
+        self.plot1.clear()
+        self.plot1.plot( self.x_data, self.y_data )
+        self.plot1.set_ylim( self.ylim )
+        if ( self.x_data[0] == 0 ):
+            self.plot1.set_xlim( self.xlim )
+        else:
+            self.plot1.set_xlim([self.x_data[0], self.x_data[-1]])
+        self.plot1.set_ylabel( "Pressure" )
+        self.plot1.set_xlabel( "Live time / s" )
+        self.canvas.draw()
+        return
     
+
     def _monitor_vacuum( self ):
         '''
         Gets the vacuum values.
         '''
-        self.peg0 = self.vac_module.GetPegInfo( 0 )[0]
-        self.pig0 = self.vac_module.GetPigInfo( 0 )[0]
-        self.pig1 = self.vac_module.GetPigInfo( 1 )[0]
-        self.pig2 = self.vac_module.GetPigInfo( 2 )[0]
-        self.pig3 = self.vac_module.GetPigInfo( 3 )[0]
-        self.pig4 = self.vac_module.GetPigInfo( 4 )[0]
-        self.pig5 = self.vac_module.GetPigInfo( 5 )[0]
+        self.peg0 = self.vaccuum.GetPegInfo( 0 )[0]
+        self.pig0 = self.vaccuum.GetPigInfo( 0 )[0]
+        self.pig1 = self.vaccuum.GetPigInfo( 1 )[0]
+        self.pig2 = self.vaccuum.GetPigInfo( 2 )[0]
+        self.pig3 = self.vaccuum.GetPigInfo( 3 )[0]
+        self.pig4 = self.vaccuum.GetPigInfo( 4 )[0]
+        self.pig5 = self.vaccuum.GetPigInfo( 5 )[0]
         return
     
-    # This furntion is run as a thread
+
     def monitor(self):
+        '''
+        Thread to monitor vacuum system.
+        '''
         print("\nMonitoring emission:\n")
         do_break=0
         
         # Source the interval from the dialog
         interval=self.interval_val.get()
         
-        # Infinite sampling loop.
-        # Broken out of by pressing Stop.
+        # Infinite sampling loop. Break by press Stop.
         while 1:
-            
             self._monitor_vacuum()
             
-            # Get the current time
-            
+            # Get the current time.
             timestring=datetime.now()
             nowtime=timestring.strftime("%H:%M:%S")
             
             
-            # Output the emission and time to the Console
-            
+            # Output to console.
             print("\rPenning 0 = "+str("%.2f" % self.peg0)+" Time = "+nowtime, end="")
             
             # Update the dialog
@@ -171,7 +183,7 @@ class Main_Dialog:
             self.mainentry.update_idletasks()
             
             # Break the sampling interval into 1s interval and check for
-            # a stop press every second
+            # a stop press every second.
             for i in range(interval):
                 if self.terminate_thread_flag==1:
                     do_break=1
@@ -180,28 +192,34 @@ class Main_Dialog:
             
             self._update_vals( interval, self.peg0 )
             self._update_graph()
+            self._log_data( nowtime )
             
             if do_break==1:
                 break
         
-        # Reset the dialog
-        
+        # Reset the dialog.
         print("\nThread ended")
         self.terminate_thread_flag=0
         self.start_button.config(state="normal")
         return
     
-    def _log_data( self ):
+
+    # Write data to file in .csv format.
+    def _log_data( self, nowtime ):
+        output = nowtime,
+                self.x_data[-1], ', ',
+                str('%.2f' % self.peg0), ', ',\
+                str('%.2f' % self.pig0), ', ',\
+                str('%.2f' % self.pig1), ', ',\
+                str('%.2f' % self.pig2), ', ',\
+                str('%.2f' % self.pig3), ', ',\
+                str('%.2f' % self.pig4), ', ',\
+                str('%.2f' % self.pig5), '\n'
+        with open(self.filename, "a") as f:
+            f.write( output )
         return
     
-    def _create_log_file( self ):
-        output = ''
-        output += 'Time(s), Peg0, Pig0, Pig1, Pig2, Pig3, Pig4, Pig5'
-        return output
-    
-    def _save_file():
-        return
-    
+
     def start_monitoring_response(self):
         '''
         Responds when the Start button is pressed
@@ -215,6 +233,7 @@ class Main_Dialog:
         threading.Timer(0, self.monitor).start()
         return
     
+
     def end_monitoring_response(self):
         '''
         Responds when the Press Me button is pressed
@@ -224,10 +243,16 @@ class Main_Dialog:
         self.start_button.config(state="normal")
         return
 
-# End of Main_Dialog class
 
-# Call the main function. Use the if __name__ etc to ensure this script will not
-# be run immdediately if loaded as a library
+### Script starts here ###
+
+# Connect to microscope.
+if ( TEM3.isconnect() == False )
+    TEM.connect()
+
+
+# Call the main function. Use the if __name__ etc. to ensure this
+# script will not be run immdediately if loaded as a library
 if __name__=='__main__':
     root = tk.Tk()
     app = Main_Dialog(root)
