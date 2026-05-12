@@ -21,14 +21,18 @@ import tkinter as tk
 import threading
 import time
 
+import PyJEM
+from PyJEM import TEM3
+
 class userInterface:
     # Python constructor.
-    def __init__(self, master, model_scope):
+    def __init__(self, master, model_scope, vscope):
         self.master = master
         self.frame = tk.Frame( self.master )
         self.master.title( 'Lens diagram' )
         self.master.configure( bg='#FFFFFF' )
         self.sim = model_scope
+        self.vscope = vscope
         
         # create a button which will invoke a sub-dialog to provide a value
         self.start_button = tk.Button(self.master,
@@ -88,6 +92,14 @@ class userInterface:
     def __del__(self):
         self.terminate_thread_flag = 1
         return
+        
+    def _update_graph(self):
+        self.sim._make_model()
+        self.fig, self.ax = self.sim._create_figure()
+        self.figsize = self.fig.get_size_inches()
+        self.fig.set_size_inches( self.figsize/3 )
+        self.canvas.draw()
+        return
 
     def monitor(self):
         '''
@@ -106,6 +118,13 @@ class userInterface:
             # Update diagram.
 
             self.mainentry.update_idletasks()
+            
+            # Update the lens diagram.
+            
+            self.sim.components = self.sim._update_components( self.vscope )
+            self._update_graph()
+            
+            print("\Objective coarse = "+str(self.vscope.OLc)+" Time = "+nowtime, end="")
             
             # Break the sampling interval into 1s interval and check for
             # a stop press every second.
@@ -132,9 +151,9 @@ class userInterface:
         self.terminate_thread_flag=0
         print("\nStart pressed")
     
-        self.thread_id=threading.get_ident()
-        print("Thread id = "+str(self.thread_id))
-        threading.Timer(0, self.monitor).start()
+        #self.thread_id=threading.get_ident()
+        #print("Thread id = "+str(self.thread_id))
+        #threading.Timer(0, self.monitor).start()
         return
     
     def end_monitoring_response(self):
@@ -192,12 +211,12 @@ class virtualMicroscope:
 
 # Use TEMGym to make a microscope model here.
 class microscopeSimulation:
-    def __init__( self ):
+    def __init__( self, vscope ):
         self.name = 'name'
         self.beam_z = 3.5
         self.beam_type = 'x_axial'
         self.num_rays = 32
-        self.components = 
+        self.components = self._update_components( vscope )
         self.model = self._make_model()
         return
 
@@ -207,7 +226,7 @@ class microscopeSimulation:
 
     def _update_components( self, vscope ):
         # update components based on PyJEM values somehow.
-        [comp.Lens(name = 'Electrostatic Lens',
+        components = [comp.Lens(name = 'Electrostatic Lens',
                                     z = 3,
                                     f = -0.2),
                         comp.DoubleDeflector(name = 'Gun Beam Deflectors',
@@ -234,12 +253,13 @@ class microscopeSimulation:
                                             aperture_radius_inner=0.05),
                         comp.Lens(name = 'OL',
                                             z = 1.5,
-                                            f = vscope.OL1),
+                                            f = vscope.OLc),
                         comp.Quadrupole(name = 'Obj Stig',
                                             z = 1.4),
-                        comp.Lens(name = 'OM',
-                                            z = 1.3,
-                                            f = vscope.OM),
+                        # Divide by 0 zero error here when in Mag mode
+                        #comp.Lens(name = 'OM',
+                        #                    z = 1.3,
+                        #                    f = vscope.OM1),
                         comp.DoubleDeflector(name = 'Image Shifts',
                                             z_up = 1.1,
                                             z_low = 1.0),
@@ -263,7 +283,7 @@ class microscopeSimulation:
                                             z =0.2,
                                             f = vscope.PL1)
                         ]
-        return
+        return components
 
     def _make_model( self ):
         self.model = Model(self.components,
@@ -286,13 +306,13 @@ class microscopeSimulation:
 #   return
 
 # Script starts here.
-v_scope = virtualMicroscope()
-model_scope = microscopeSimulation()
+virtual_scope = virtualMicroscope()
+model_scope = microscopeSimulation( virtual_scope )
 
 
 # UI as thread.
 if __name__=='__main__':
     root = tk.Tk()
-    app = userInterface( root, model_scope )
+    app = userInterface( root, model_scope, virtual_scope )
     root.mainloop()
     root.mainloop()
