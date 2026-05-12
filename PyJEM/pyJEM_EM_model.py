@@ -89,16 +89,17 @@ class userInterface:
         
         self.terminate_thread_flag=0
         return
-
+    
     # Destructor.
     def __del__(self):
         self.terminate_thread_flag = 1
         return
         
     def _update_graph(self):
+        self.ax.clear()
         self.sim._make_model()
         self.figsize = self.fig.get_size_inches()
-        self.fig.set_size_inches( self.figsize/3 )
+        self.fig.set_size_inches( self.figsize/2 )
         self.canvas.draw()
         return
 
@@ -121,9 +122,16 @@ class userInterface:
             self.mainentry.update_idletasks()
             
             # Update the lens diagram.
+            self.ax.clear()
+            self.fig.clear()
+            self.vscope._update_lenses()
+            self.sim.components = self.sim._update_components( self.vscope )
+            self.sim._make_model()
+            self.fig, self.ax = self.sim._create_figure()
+            #self.figsize = self.fig.get_size_inches()
+            #self.fig.set_size_inches( self.figsize/2 )
+            self.canvas.draw()
             
-            #self.sim.components = self.sim._update_components( self.vscope )
-            #self._update_graph()
             
             timestring=datetime.now()
             nowtime=timestring.strftime("%H:%M:%S")
