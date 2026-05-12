@@ -7,6 +7,8 @@ Something using pyJEM and TEMGym to make a live model of the beam path thru the 
 
 import numpy as np
 
+from datetime import datetime
+
 import temgymbasic
 from temgymbasic import components as comp
 from temgymbasic.model import Model
@@ -26,13 +28,13 @@ from PyJEM import TEM3
 
 class userInterface:
     # Python constructor.
-    def __init__(self, master, model_scope, vscope):
+    def __init__(self, master ):
         self.master = master
         self.frame = tk.Frame( self.master )
         self.master.title( 'Lens diagram' )
         self.master.configure( bg='#FFFFFF' )
-        self.sim = model_scope
-        self.vscope = vscope
+        self.vscope = virtualMicroscope()
+        self.sim = microscopeSimulation( self.vscope )
         
         # create a button which will invoke a sub-dialog to provide a value
         self.start_button = tk.Button(self.master,
@@ -95,7 +97,6 @@ class userInterface:
         
     def _update_graph(self):
         self.sim._make_model()
-        self.fig, self.ax = self.sim._create_figure()
         self.figsize = self.fig.get_size_inches()
         self.fig.set_size_inches( self.figsize/3 )
         self.canvas.draw()
@@ -116,15 +117,17 @@ class userInterface:
             # Grab microscope state.
             # Draw figure.
             # Update diagram.
-
+            
             self.mainentry.update_idletasks()
             
             # Update the lens diagram.
             
-            self.sim.components = self.sim._update_components( self.vscope )
-            self._update_graph()
+            #self.sim.components = self.sim._update_components( self.vscope )
+            #self._update_graph()
             
-            print("\Objective coarse = "+str(self.vscope.OLc)+" Time = "+nowtime, end="")
+            timestring=datetime.now()
+            nowtime=timestring.strftime("%H:%M:%S")
+            print("\rObjective coarse = "+str(self.vscope.OLc), nowtime, end="")
             
             # Break the sampling interval into 1s interval and check for
             # a stop press every second.
@@ -151,9 +154,9 @@ class userInterface:
         self.terminate_thread_flag=0
         print("\nStart pressed")
     
-        #self.thread_id=threading.get_ident()
-        #print("Thread id = "+str(self.thread_id))
-        #threading.Timer(0, self.monitor).start()
+        self.thread_id=threading.get_ident()
+        print("Thread id = "+str(self.thread_id))
+        threading.Timer(0, self.monitor).start()
         return
     
     def end_monitoring_response(self):
@@ -300,19 +303,21 @@ class microscopeSimulation:
         return fig, ax
 
 
-#def connect_to_microscope():
-#   if (TEM3.isconnect == False):
-#       TEM.connect()
-#   return
+def connect_to_microscope():
+    '''
+    Connect to TEM with PyJEM.
+    '''
+    if (TEM3.isconnect == False):
+        TEM.connect()
+    return
 
 # Script starts here.
-virtual_scope = virtualMicroscope()
-model_scope = microscopeSimulation( virtual_scope )
+connect_to_microscope()
 
 
 # UI as thread.
 if __name__=='__main__':
     root = tk.Tk()
-    app = userInterface( root, model_scope, virtual_scope )
+    app = userInterface( root )
     root.mainloop()
     root.mainloop()
