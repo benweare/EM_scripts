@@ -110,7 +110,7 @@ class microscopeMonitor():
         Update the data used to draw the graph.
         '''
         self.peg0_data.append( self.vac_module.GetPegInfo( 0 )[0] )
-        self.pig2_data.append( self.vac_module.GetPigInfo( 0 )[0] )
+        self.pig0_data.append( self.vac_module.GetPigInfo( 0 )[0] )
         self.pig1_data.append( self.vac_module.GetPigInfo( 1 )[0] )
         self.pig2_data.append( self.vac_module.GetPigInfo( 2 )[0] )
         self.pig3_data.append( self.vac_module.GetPigInfo( 3 )[0] )
