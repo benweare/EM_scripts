@@ -1,10 +1,18 @@
 '''
 Script to monitor the TEM vacuum via PyJEM.
 
-Uses a matplotlib FuncAnimation to draw live plot.
-Creates a log file of pressures in .csv format.
+Features:
+- Uses a matplotlib FuncAnimation to draw live plot of Penning gauge 1, 
+    Pirani gauge 2, and Pirani gauge 4.
+- Creates a log file of all Penning and Pirani gauges in .csv format.
+- Tested on 2100+ TEM at nmRC.
+- Useful for cryoTEM vacuum monitoring.
 
-BLW @ nmRC
+Known issues:
+- matplotlib graph resizing x-axis slightly when running continuously.
+- works on nmrc OneView server, but not on EDS pc.
+
+BLW @ nmRC.
 '''
 
 
