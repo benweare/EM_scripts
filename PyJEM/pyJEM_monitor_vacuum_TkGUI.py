@@ -1,6 +1,8 @@
 '''
 Script to monitor the Penning gauge vacuum via PyJEM.
 
+OUTDATED: see newer version of script that isn't based on Tkinter GUI.
+
 Currently plots Penning gauge 1, Pirani gauge 2, and Pirani gauge 4.
 Tested on 2100+ TEM at nmRC.
 Useful for cryoTEM vacuum monitoring.
