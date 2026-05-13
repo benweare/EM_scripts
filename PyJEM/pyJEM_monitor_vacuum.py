@@ -2,9 +2,15 @@
 Script to monitor the Penning gauge vacuum via PyJEM.
 
 Currently plots Penning gauge 1, Pirani gauge 2, and Pirani gauge 4.
+Tested on 2100+ TEM at nmRC.
+Useful for cryoTEM vacuum monitoring.
+
+Known issues:
+- matplotlib graph resizing x-axis slightly when running continuously.
+- works on nmrc OneView server, but not on EDS pc.
 
 Based on DM Scripting Site script Emission Monitor.
-BLW @ nmRC, 07-05-2026
+BLW @ nmRC.
 Work in progress.
 '''
 
@@ -20,8 +26,8 @@ from datetime import datetime
 
 from PyJEM import TEM3
 
-
-TEM3.connect()
+if (TEM3.isconnect() == False ):
+    TEM3.connect()
 
 class Main_Dialog:
     '''
@@ -75,8 +81,8 @@ class Main_Dialog:
         self.ylim = [0, 200]
         # y-axis values.
         self.peg0_data = [0]
-        self.pig2_data = [0]
-        self.pig4_data = [0]
+        self.pig1_data = [0]
+        self.pig3_data = [0]
         # x-axis values.
         self.time_data = [0]
         
@@ -87,8 +93,8 @@ class Main_Dialog:
         self.axs.set_ylim( self.ylim )
         self.axs.set_xlim( self.xlim )
         self.axs.plot( self.time_data, self.peg0_data, label='PeG1' )
-        self.axs.plot( self.time_data, self.pig2_data, label='PiG2')
-        self.axs.plot( self.time_data, self.pig4_data, label='PiG4')
+        self.axs.plot( self.time_data, self.pig1_data, label='PiG2')
+        self.axs.plot( self.time_data, self.pig3_data, label='PiG4')
         plt.legend( ['PeG1','PiG2','PiG4'], loc='upper left' )
         
         # Assemble the items into the dialog
@@ -121,8 +127,8 @@ class Main_Dialog:
     def _update_graph( self ):
         self.axs.clear()
         self.axs.plot( self.time_data, self.peg0_data, label='PeG1' )
-        self.axs.plot( self.time_data, self.pig2_data, label='PiG2')
-        self.axs.plot( self.time_data, self.pig4_data, label = 'PiG4' )
+        self.axs.plot( self.time_data, self.pig1_data, label='PiG2')
+        self.axs.plot( self.time_data, self.pig3_data, label = 'PiG4' )
         self.axs.set_ylim( self.ylim )
         if (self.time_data[0] == 0):
             self.axs.set_xlim([0, self.max_time])
@@ -144,14 +150,14 @@ class Main_Dialog:
         Update the data used to draw the graph.
         '''
         self.peg0_data.append( self.peg0 )
-        self.pig2_data.append( self.pig2 )
-        self.pig4_data.append( self.pig4 )
+        self.pig1_data.append( self.pig1 )
+        self.pig3_data.append( self.pig3 )
         self.time_data.append( self.time_data[-1]+interval )
         if (len(self.time_data) > self.max_time):
             self.time_data.pop(0)
             self.peg0_data.pop(0)
-            self.pig2_data.pop(0)
-            self.pig4_data.pop(0)
+            self.pig1_data.pop(0)
+            self.pig3_data.pop(0)
         return
     
     def _monitor_vacuum( self ):
