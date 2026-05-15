@@ -1,4 +1,4 @@
-#Example code to make a matplotlib plot
+
 def show_matplotlib(model, name = 'model.svg', component_lw = 4, edge_lw = 1, label_fontsize = 20, **kwargs):
     '''Code to show a matplotlib model
 
