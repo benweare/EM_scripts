@@ -7,7 +7,8 @@ import matplotlib.pyplot as plt
 
 import numpy as np
 
-# Relative height of components measured from top down, in mm.
+# Relative height of components measured from bottom up, in mm.
+# Taking viewing screen as the 0 height.
 rel_height = np.array( [1,# Gun
             4,# CL1
             4,# CL2
@@ -16,20 +17,21 @@ rel_height = np.array( [1,# Gun
             4,# C STIG
             4,# C DEF
             2,# CM
-            #,# OA
-            9.5,# Specimen
+            # x-ray aperture
+            4,# Specimen
+            5.5,# OA
             4,# OL STIG
-            3,# OL1
-            #,# OM
+            1,# OL1
+            2,# OM
             5,# OL2
             3,# IMAGE SHIFT
-            #,# SA
-            #,# ILSTIG
-            6,# IL1
+            3,# SA
+            3,# ILSTIG
+            5.5,# IL1
             5.5,# IL2
             2.5,# IL3
             2.5,# PL DEF
-            3.0])# PL
+            3])# PL - really 33 above viewing screen
 
 # Absolute height.
 height = np.flip(np.cumsum( np.flip(rel_height), axis=-1 ))
@@ -42,77 +44,99 @@ scale_factor = 0.1
 top = top * scale_factor
 height = height * scale_factor
 
+# Focal length of lens.
+focal_length = [-0.2,# Gun
+                -0.2,# CL1
+                -0.2,# CL2
+                -0.2,# CL3
+                -0.2,# CM
+                -0.2,# OL1
+                -0.2,# OM
+                -0.2,# OL2
+                -0.2,# IL1
+                -0.2,# IL2
+                -0.2,# IL3
+                -0.8]# PL
+
+# Aperture diameters.
+cond_a = np.array([10, 5, 2, 1])/100
+obj_a = np.array([10, 5, 2, 1])/100
+sel_a = np.array([10, 5, 2, 1])/100
+
 # Taking the gun as the first crossover.
 components = [comp.Lens(name = 'Electrostatic Lens',# Acting as the whole electron gun
                 z = height[0], 
-                f = -0.2),
+                f = focal_length[0]),
               # 2 def in reality.
               #comp.DoubleDeflector(name = 'Gun def 1', 
               #  z_up = 2.8, 
               #  z_low = 2.7),
               comp.Lens(name = 'CL1', 
                 z = height[1], 
-                f = -0.2),
+                f = focal_length[1]),
               comp.Lens(name = 'CL2', 
                 z = height[2], 
-                f = -0.2),
+                f = focal_length[2]),
               comp.Lens(name = 'CL3', 
                 z = height[3], 
-                f = -0.2),
+                f = focal_length[3]),
               comp.Aperture(name = 'CA', 
                 z = height[4], 
-                aperture_radius_inner=0.05),
-              #comp.Quadrupole(name = 'C stig', 
-              #  z = 2.2),
+                aperture_radius_inner = cond_a[0]),
+              comp.Quadrupole(name = 'C stig', 
+                z = height[5]),
               # Spot align here
               # 2 def in reality.
               comp.DoubleDeflector(name = 'C def 1', 
-                z_up = height[5]+(0.5*scale_factor), 
-                z_low = height[5]-(0.5*scale_factor)),
+                z_up = height[6]+(0.4*scale_factor), 
+                z_low = height[6]-(0.5*scale_factor)),
               comp.Lens(name = 'CM', 
-                z = height[6], 
-                f = -0.2),
-              #comp.Aperture(name = 'Objective Aperture', 
-              #  z = 1.7, 
-              #  aperture_radius_inner=0.05),
-              #comp.Sample(name = 'Sample', 
-              #  z = height[7]),
-              comp.Quadrupole(name = 'OL Stig', 
+                z = height[7], 
+                f = focal_length[4]),
+              comp.Sample(name = 'Sample',
+                sample = np.zeros((5,2)),
                 z = height[8]),
-              comp.Lens(name = 'OL1', 
+              comp.Aperture(name = 'Objective Aperture', 
                 z = height[9], 
-                f = -0.2),
-              #comp.Lens(name = 'OM', 
-              #  z = 1.3, 
-              #  f = -0.2),
+                aperture_radius_inner = obj_a[0]),
+              comp.Quadrupole(name = 'OL Stig', 
+                z = height[10]),
+              comp.Lens(name = 'OL1', 
+                z = height[11], 
+                f = focal_length[5]),
+              comp.Lens(name = 'OM', 
+                z = height[12], 
+                f = focal_length[6]),
               comp.Lens(name = 'OL2', 
-                z = height[10], 
-                f = -0.2),
+                z = height[13], 
+                f = focal_length[7]),
               # 2 def in reality
               comp.DoubleDeflector(name = 'Image Shift 1', 
-                z_up = height[11]+(0.5*scale_factor), 
-                z_low = height[11]-(0.5*scale_factor)),
-              #comp.Aperture(name = 'SA', 
-              #  z = 0.9, 
-              #  aperture_radius_inner=0.05),
-              #comp.Quadrupole(name = 'IL stig', 
-              #  z = 0.8),
+                z_up = height[14]+(0.5*scale_factor), 
+                z_low = height[14]-(0.5*scale_factor)),
+              comp.Aperture(name = 'SA', 
+                z = height[15], 
+                aperture_radius_inner = sel_a[0]),
+              comp.Quadrupole(name = 'IL stig', 
+                z = height[16]),
               comp.Lens(name = 'IL1', 
-                z = height[12], 
-                f = -0.2),
+                z = height[17], 
+                f = focal_length[8]),
               comp.Lens(name = 'IL2', 
-                z = height[13], 
-                f = -0.2),
+                z = height[18], 
+                f = focal_length[9]),
               comp.Lens(name = 'IL3', 
-                z = height[14], 
-                f = -0.2),
+                z = height[19], 
+                f = focal_length[10]),
               comp.DoubleDeflector(name = 'PL Def', 
-                z_up = height[15]+ (0.5*scale_factor), 
-                z_low = height[15]-(0.5*scale_factor)),
+                z_up = height[20]+ (0.5*scale_factor), 
+                z_low = height[20]-(0.5*scale_factor)),
               comp.Lens(name = 'PL', 
-                z =height[16], 
-                f = -0.2)
+                z =height[21], 
+                f = focal_length[11])
               ]
+
+screen_width = 20 *scale_factor
 
 # List of part labels
 labels = []
@@ -123,11 +147,14 @@ plus_model = Model(components,
 				beam_type='x_axial',
                 num_rays=32,
                 gun_beam_semi_angle=0.15,
-                beam_tilt_x=0)
+                beam_tilt_x=0,
+                detector_size=screen_width)
 name = 'model_tem.svg'
 
-fig, ax = show_matplotlib(plus_model, name = name, label_fontsize = 14)
-fig.suptitle('TEM Model', fontsize=32)
-print(plus_model)
+fig, ax = show_matplotlib(plus_model,
+                            name = name,
+                            label_fontsize = 8)
+fig.suptitle('2100Plus Scale Model',fontsize=10)
 
+print(plus_model)
 plt.show()
