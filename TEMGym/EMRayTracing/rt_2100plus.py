@@ -49,20 +49,81 @@ scale_factor = 0.01 # i.e. in cm
 top = top * scale_factor
 height = height * scale_factor
 
+class lens_settings:
+    '''
+    Class to contain lens settins for different illumination and
+    magnification modes.
+    '''
+    def __init__(self, alpha = 1, mag_range = 1):
+        # Some standard settings.
+        self.default = np.array([\
+                    -0.05,# Gun, sets the gun spread
+                    -0.015,# CL1
+                    -0.010,# CL2
+                    -0.015,# CL3
+                    -0.1,# CM
+                    -0.8,# OL1
+                    -0.01,# OM
+                    -0.05,# OL2
+                    -0.022,# IL1
+                    -0.015,# IL2
+                    -0.02,# IL3
+                    -0.015])# PL
+        # Custom settings.
+        if alpha == 3:
+            self.condenser = np.array([\
+                    -0.05,# Gun, sets the gun spread
+                    -0.015,# CL1
+                    -0.010,# CL2
+                    -0.008,# CL3
+                    -0.1])# CM
+        elif alpha == 2:
+            self.condenser = np.array([\
+                    -0.05,# Gun, sets the gun spread
+                    -0.015,# CL1
+                    -0.010,# CL2
+                    -0.011,# CL3
+                    -0.1])# CM
+        elif alpha == 1:
+            self.condenser = np.array([\
+                    -0.05,# Gun, sets the gun spread
+                    -0.015,# CL1
+                    -0.010,# CL2
+                    -0.015,# CL3
+                    -0.1])# CM
+
+        if mag_range == 0:
+            # 8 - 30 kX
+            self.imaging = np.array([\
+                    -0.8,# OL1
+                    -0.01,# OM
+                    -0.05,# OL2
+                    -0.022,# IL1
+                    -0.015,# IL2
+                    -0.02,# IL3
+                    -0.015])# PL
+        elif mag_range == 1:
+            # 40 - 800 kX
+            self.imaging = np.array([\
+                    -0.8,# OL1
+                    -0.01,# OM
+                    -0.05,# OL2
+                    -0.022,# IL1
+                    -0.015,# IL2
+                    -0.02,# IL3
+                    -0.015])# PL
+        #elif mag_range == 2:
+
+        self.settings = np.concatenate((self.condenser, self.imaging))
+        return
+
+
+lens_settings = lens_settings(alpha=3, mag_range=1)
+
 # Focal length of lens.
 # in m
-focal_length = np.array([-0.1,# Gun, does nothing atm
-                -0.015,# CL1
-                -0.010,# CL2
-                -0.015,# CL3
-                -0.1,# CM
-                -0.8,# OL1
-                -0.01,# OM
-                -0.05,# OL2
-                -0.022,# IL1
-                -0.015,# IL2
-                -0.02,# IL3
-                -0.015])# PL
+# For 40-80kX mag range & alpha 1 illumination
+focal_length = lens_settings.settings
 
 focal_length = focal_length
 
@@ -107,9 +168,9 @@ components = [#comp.Lens(name = 'Electrostatic Lens',# Acting as the whole elect
               #  aperture_radius_inner = obj_a[0]),
               #comp.Quadrupole(name = 'OL Stig', 
               #  z = height[10]),
-              comp.Lens(name = 'OL1', 
-                z = height[11], 
-                f = focal_length[5]),
+              #comp.Lens(name = 'OL1', 
+              #  z = height[11], 
+              #  f = focal_length[5]),
               #comp.Lens(name = 'OM', 
               #  z = height[12], 
               #  f = focal_length[6]),
@@ -425,7 +486,7 @@ plus_model = Model(components,
 				beam_z=top,
 				beam_type='x_axial',
                 num_rays=32,
-                gun_beam_semi_angle=0.25,
+                gun_beam_semi_angle=focal_length[0],
                 beam_tilt_x=0,
                 detector_size=screen_width)
 name = 'model_tem.svg'
