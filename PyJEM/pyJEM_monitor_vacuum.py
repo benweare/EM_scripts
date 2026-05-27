@@ -35,10 +35,10 @@ class microscopeMonitor():
     Creates live matpltlib graph of column vacuum.
     '''
     
-    def __init__( self ):
+    def __init__( self, vacuum, lenses ):
         # Bools to pick which values are tracked.
-        self.monitor_vacuum = True
-        self.monitor_lenses = True
+        self.monitor_vacuum = vacuum
+        self.monitor_lenses = lenses
         
         # Connect to the microscope.
         if TEM3.isconnect() == False:
@@ -74,11 +74,11 @@ class microscopeMonitor():
         if self.monitor_vacuum == False and self.monitor_lenses == True:
             self.fig, self.axs = plt.subplots( 1, figsize = (5, 5), layout='tight', dpi = 100)
             self._lens_axis( self.axs, self.xlim )
+            plt.legend( ['CL1', 'CL2', 'CL3', 'CM', 'OLc', 'OLf', 'OM1', 'OM2', 'IL1', 'IL2', 'IL3', 'PL1'], loc='upper left' )
         if self.monitor_vacuum == True and self.monitor_lenses == False:
             self.fig, self.axs = plt.subplots( 1, figsize = (5, 5), layout='tight', dpi = 100)
             self._vac_axis( self.axs, self.xlim )
-
-        #plt.legend( ['PeG1','PiG2','PiG4'], loc='upper left' )
+            plt.legend( ['PeG1','PiG2','PiG4'], loc='upper left' )
         
         # Create file to log data.
         timestring=datetime.now()
@@ -183,9 +183,11 @@ class microscopeMonitor():
         if self.monitor_vacuum == True and self.monitor_lenses == False:
             self.axs.clear()
             self._vac_axis( self.axs, xlim  )
+            plt.legend( ['PeG1','PiG2','PiG4'], loc='upper left' )
         if self.monitor_vacuum == False and self.monitor_lenses == True:
             self.axs.clear()
             self._lens_axis( self.axs, xlim  )
+            plt.legend( ['CL1', 'CL2', 'CL3', 'CM', 'OLc', 'OLf', 'OM1', 'OM2', 'IL1', 'IL2', 'IL3', 'PL1'], loc='upper left' )
         # Log data to file.
         self._log_data()
         return
@@ -304,7 +306,7 @@ class microscopeMonitor():
 
 #style.use('fivethirtyeight')
 
-vac_sys = microscopeMonitor()
+vac_sys = microscopeMonitor( True, False )
 
 ani = animation.FuncAnimation(vac_sys.fig, vac_sys._animate, cache_frame_data=False, interval=vac_sys.interval)
 
