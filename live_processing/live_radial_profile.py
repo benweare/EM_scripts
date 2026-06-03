@@ -12,21 +12,9 @@ import numpy as np
 import sys
 import time
 import traceback
-
-# Required as per DM-Script manual.
-#sys.argv.extend(['-a', ' '])
-#import matplotlib.pyplot as plt
-
 import DigitalMicrograph as DM
 
-import pyCTF
-from pyCTF.image import ElectronImage
-from pyCTF.image import import_ctf
-from pyCTF.fourier import Fourier
-from pyCTF.profile import Profile
 
-
-# From Ben Miller script
 class imageListener( DM.Py_ScriptObject ):
     '''
     Image listener class.
@@ -117,7 +105,7 @@ class imageListener( DM.Py_ScriptObject ):
                 break
         if id is None:
             #I f No ROI is found, create one that covers the whole image. 
-            print("\nRectangular ROI not found. Using whole image.\n")
+            print('\nRectangular ROI not found. Using whole image.\n')
             data_shape = image.GetNumArray().shape
             roi=DM.NewROI()
             roi.SetRectangle(0, 0, data_shape[0], data_shape[1])
@@ -126,14 +114,14 @@ class imageListener( DM.Py_ScriptObject ):
             roi.SetResizable(False)
             id = roi.GetID()
         return id
-
-
+    
+    
     #@jit
     # From PyCTF module.
-    def radial_profile( data, centX, centY ):
+    def radial_profile( self, data, centX, centY ):
         '''
         Create radial profile of 2D array.
-
+        
         Parameters
         ----------
         data : array
@@ -142,14 +130,14 @@ class imageListener( DM.Py_ScriptObject ):
             Centre of array in x-axis.
         centY : int
             Centre of array in y-axis.
-
+        
         Returns
         -------
         radialprofile :  array
             Output, 1D array.
         bins : int
             Length of radial profile.
-
+        
         Notes
         -----
         Based on example from Stack Exchange:
@@ -159,7 +147,6 @@ class imageListener( DM.Py_ScriptObject ):
         '''
         y, x = np.indices( data.shape )
         r = np.sqrt( np.square(x - centX) + np.square(y - centY) )
-        # np.int64 here rather than int so Numba works.
         r = r.astype( np.int64 )
         tbin = np.bincount( r.ravel(), data.ravel() )
         nr = np.bincount( r.ravel() )
@@ -169,12 +156,12 @@ class imageListener( DM.Py_ScriptObject ):
     
     
         # Function run each time updates.
-    def processing_loop( self, image_data ):
+    def processing_loop( self ):
         '''
         Function to be called every time data is updated.
         '''
         # Copy live view to the extract image.
-        self.radial_profile[:], _ = self.radial_profile( self.image_data.copy(), len(self.image_data[0])/2), len(self.image_data[0])/2 )
+        self.profile[:], _ = self.radial_profile( self.data.copy(), len(self.data[0])/2), len(self.data[0])/2 )
         return
     
     
@@ -188,7 +175,7 @@ class imageListener( DM.Py_ScriptObject ):
                 val, val2, val3, val4 = self.roi.GetRectangle()
                 self.data = self.imgref.GetNumArray()[int(val):int(val3),int(val2):int(val4)]
                 
-                self.processing_loop( self.data )
+                self.processing_loop( )
                 
                 #Update the image displays.
                 
@@ -237,6 +224,7 @@ class imageListener( DM.Py_ScriptObject ):
         if ( DM.IsScriptOnMainThread() == False ):
             print( 'MatplotLib scripts are required to be run on the main thread.\n' )
             exit()
+        return
 
 
     def _np_array_to_dm_image( self, input_array, **kwargs ):
@@ -245,8 +233,6 @@ class imageListener( DM.Py_ScriptObject ):
         if (title != None):
             dm_image.SetName( title )
         return dm_image
-    
-        return
 
 
 # Script starts here.
