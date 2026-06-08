@@ -2,30 +2,31 @@
 
 Script to communicate with an Oxford Instruments ICT503.
 
-Communicates over RS232 or GPIB interface.
+Communicates over RS232 or GPIB interface, using PySerial. 
 
 '''
 
 import serial as serial
+
 
 class SerialComms:
 	'''
 	Class for serial communications.
 	'''
 	def __init__( self ):
-		serial_port = self.open_port
+		self.serial_port = None
 		return
 
-	def open_port():
-		ser = serial.Serial(\
-		port='COM3',\
-		baudrate=9600,\
-		timeout=2,\
-		write_timeout=2,\
+	def open_port( self, pname='COM3', brate=9600, tout=2, wtout=2 ):
+		self.serial_port = serial.Serial(\
+		port=pname,\
+		baudrate=brate,\
+		timeout=tout,\
+		write_timeout=wtout,\
 		bytesize=serial.EIGHTBITS,\
 		parity=serial.PARITY_NONE )
-		print('Serial port: ' + ser.name + '\n') #confirm which port is used
-		return ser
+		print('Serial port: ' + serial_port.name + '\n') #confirm which port is used
+		return
 
 	def write_port( self, command ):
 		command.encode('utf-8')
@@ -35,6 +36,16 @@ class SerialComms:
 		#ser.reset_input_buffer() #clear input queue
 		#ser.reset_output_buffer() #clear output buffer
 		#ser.close() #close port
+
+	def test_ports( self ):
+		from serial.tools import list_ports
+		print(list_ports.comports())
+		return
+
+	def close_port( self ):
+		self.serial_port.close( )
+		return
+
 
 class Monitor:
 	'''
@@ -53,10 +64,10 @@ class Monitor:
 	X EXAMINE STATUS
 
 	'''
-	def __init__( self):
+	def __init__( self ):
 		return
 
-	def set_control( mode, locked ):
+	def set_control( self, mode, locked ):
 		mode = lower(mode)
 		if mode == 'local' and locked == True:
 			output = 'C0'
@@ -68,7 +79,7 @@ class Monitor:
 			output = 'C3'
 		return output
 
-	def set_comm_protocol( mode ):
+	def set_comm_protocol( self, mode ):
 		mode = lower(mode)
 		if mode == 'normal':
 			output = 'Q0'
@@ -76,7 +87,7 @@ class Monitor:
 			output = 'Q1'
 		return output
 
-	def set_unlock( mode ):
+	def set_unlock( self, mode ):
 		'''
 		Warning: these may erase memory values. Do not use unless you
 		are confident. 
@@ -97,18 +108,19 @@ class Monitor:
 			output = 'U0'
 		return
 
-	def read_version():
+	def read_version( self ):
 		return 'V'
 
-	def set_wait( delay=1000 ):
+	def set_wait( self, delay=1000 ):
 		'''
 		Delay in miliseconds, formatted as 'nnnn'
 		'''
 		output = 'W'+ str(delay)
 		return output
 
-	def examine():
-		return output = 'X'
+	def examine(self, ):
+		output = 'X'
+		return output
 
 
 class Control:
@@ -131,10 +143,10 @@ class Control:
 	Tnnnnn SET DESIRED TEMPERATURE
 
 	'''
-	def __init__( self):
+	def __init__( self ):
 		return
 
-	def set_control( heater, gas ):
+	def set_control( self, heater, gas ):
 		heater = lower(heater)
 		gas = lower(gas)
 		if heater == 'manual' and gas == 'manual':
@@ -167,14 +179,17 @@ class System:
 	def __init__( self):
 		return
 
-	def _load_RAM( kilobytes=8 ):
-		return output = 'Y'+str(kilobytes)
+	def _load_RAM( self, kilobytes=8 ):
+		output = 'Y'+str(kilobytes)
+		return output
 
-	def _dump_RAM( kilobytes=8 ):
-		return output = 'Z'+str(kilobytes)
+	def _dump_RAM( self, kilobytes=8 ):
+		output = 'Z'+str(kilobytes)
+		return output
 
-	def _store_RAM_to_EEPROM( kilobytes=8 ):
-		return output = '~'
+	def _store_RAM_to_EEPROM( self, kilobytes=8 ):
+		output = '~'
+		return output
 
 	def _set_isobus_address():
 		# section 10.5 of manual
@@ -204,34 +219,34 @@ class Specialist:
 	o READ VALVE SCALING
 	'''
 
-	def __init__( self):
+	def __init__( self ):
 		return
 
-	def read_sweep_table():
+	def read_sweep_table( self ):
 		return 'r'
 
-	def wipe_sweep_table():
+	def wipe_sweep_table( self ):
 		return 'w'
 
-	def read_autopid_table():
+	def read_autopid_table( self ):
 		return 'q'
 
-	def read_x_pointer():
+	def read_x_pointer(self):
 		return 't'
 
-	def read_gas_flow_params():
+	def read_gas_flow_params(self):
 		return 'd'
 
-	def read_flow_control():
+	def read_flow_control(self):
 		return 'm'
 
-	def read_target_voltage():
+	def read_target_voltage(self):
 		return 'n'
 
-	def read_valve_scaling():
+	def read_valve_scaling(self):
 		return 'o'
 
-	def set_pointer( type, value ):
+	def set_pointer( self, type, value ):
 		'''
 		type : string
 			x, or y. 
@@ -241,11 +256,30 @@ class Specialist:
 		output = type + string
 		return output
 
-	def set_sweep_table():
+	def set_sweep_table(self):
 		return
 
-	def set_autopid_table():
+	def set_autopid_table(self):
 		return
 
-	def set_heater_voltage_table():
+	def set_heater_voltage_table(self):
 		return
+
+
+class ICT503( Monitor, Control, System ):
+	'''
+	Child class for ICT503.
+	'''
+	def __init__( self):
+		print('Init ICR503.\n')
+		return
+
+# Main script here.
+
+device = ICT503()
+
+comms = SerialComms()
+
+comms.test_ports()
+
+# End of script.
