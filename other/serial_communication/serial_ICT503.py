@@ -8,7 +8,6 @@ Communicates over RS232 or GPIB interface, using PySerial.
 
 import serial as serial
 
-
 class SerialComms:
 	'''
 	Class for serial communications.
@@ -29,6 +28,8 @@ class SerialComms:
 		return
 
 	def write_port( self, command ):
+		self.serial_port.reset_input_buffer()
+		self.serial_port.reset_output_buffer()
 		command.encode('utf-8')
 		self.serial_port.write( command )
 		return
@@ -45,6 +46,15 @@ class SerialComms:
 	def close_port( self ):
 		self.serial_port.close( )
 		return
+
+
+# Function to write the commands into the correct syntax.
+def _write_command( input, noreply=True ):
+	if noreply == True:
+		output = '$' + input + r'\r'
+	if noreply == False:
+		output = + input + r'\r'
+	return output
 
 
 class Monitor:
@@ -68,23 +78,40 @@ class Monitor:
 		return
 
 	def set_control( self, mode, locked ):
-		mode = lower(mode)
+		mode = mode.lower()
 		if mode == 'local' and locked == True:
-			output = 'C0'
+			command = 'C0'
 		if mode == 'remote' and locked == True:
-			output = 'C1'
+			command = 'C1'
 		if mode == 'local' and locked == False:
 			output = 'C2'
 		if mode == 'remote' and locked == False:
-			output = 'C3'
+			command = 'C3'
+		output = _write_command( command )
 		return output
 
 	def set_comm_protocol( self, mode ):
-		mode = lower(mode)
+		mode = mode.lower()
 		if mode == 'normal':
 			output = 'Q0'
 		else:
 			output = 'Q1'
+		output = _write_command( output )
+		return output
+
+	def read_variable( self, mode='0' ):
+		'''
+		Read a variable from 0 to 13.
+		0 Set temperature
+		1-3 Sensor temperature
+		4 Temperature error
+		5-6 Heater OP (%, volts)
+		7 Gas flow OP
+		8-10 P, I, D
+		11-13 Channels 1,2, and 3 Freq/4
+		'''
+		output = 'R' + mode
+		output = _write_command( output )
 		return output
 
 	def set_unlock( self, mode ):
@@ -92,7 +119,7 @@ class Monitor:
 		Warning: these may erase memory values. Do not use unless you
 		are confident. 
 		'''
-		mode = lower(mode)
+		mode = mode.lower()
 		if mode == 'default':
 			output = 'U0'
 		if mode == '!':
@@ -106,21 +133,22 @@ class Monitor:
 		else:
 			# Safety measure.
 			output = 'U0'
-		return
+		output = _write_command( output )
+		return output
 
 	def read_version( self ):
-		return 'V'
+		return _write_command('V')
 
-	def set_wait( self, delay=1000 ):
+	def set_wait( self, delay='1000' ):
 		'''
 		Delay in miliseconds, formatted as 'nnnn'
 		'''
-		output = 'W'+ str(delay)
+		output = 'W'+ delay
+		output = _write_command( output )
 		return output
 
-	def examine(self, ):
-		output = 'X'
-		return output
+	#def examine( self ):
+	#	return _write_command( 'X' )
 
 
 class Control:
@@ -147,8 +175,8 @@ class Control:
 		return
 
 	def set_control( self, heater, gas ):
-		heater = lower(heater)
-		gas = lower(gas)
+		heater = heater.lower()
+		gas = gas.lower()
 		if heater == 'manual' and gas == 'manual':
 			output = 'A0'
 		if heater == 'auto' and gas == 'auto':
@@ -157,8 +185,101 @@ class Control:
 			output = 'A2'
 		if heater == 'auto' and gas == 'auto':
 			output = 'A3'
+		output = _write_command( output )
 		return output
 
+	def set_P( self, input ):
+		output = 'P'+input
+		output = _write_command( output )
+		return output
+
+	def set_I( self, input  ):
+		output = 'I'+input
+		output = _write_command( output )
+		return output
+
+	def set_D( self, input  ):
+		output = 'D'+input
+		output = _write_command( output )
+		return output
+
+	def set_front_panel( self, input ):
+		'''
+		Set front panel to output a parameter other than temperature.
+
+		Same syntax as 'R' command, Monitor.read_variable().
+		'''
+		output = 'F' + input
+		output = _write_command( output )
+		return output
+
+	def set_gas_flow( self, input ):
+		output = 'G' + input
+		output = _write_command( output )
+		return output
+
+	def set_heater_sensor(self, input='1'):
+		'''
+		Select sensor 1, 2, or 3.
+		'''
+		output = 'H' + input
+		output = _write_command( output )
+		return output
+
+	def set_auto_PID( self, input ):
+		'''
+		Set whether to use the auto PID tables.
+		'''
+		if input == True:
+			output = 'L0'
+		if input == False:
+			output = 'L1'
+		else:
+			output = 'L0'
+		output = _write_command( output )
+		return output
+
+	def set_maximum_heater_voltage( self, input='1.0' ):
+		'''
+		Input in 0.1 V resolution.
+		'''
+		output = 'M' + input
+		return
+
+	def set_manual_heater_output(  self, input='0.0' ):
+		'''
+		Set as a percentage of maximum heater voltage in 0.1% steps.
+		'''
+		output = 'M' + input
+		output = _write_command( output )
+		return output
+
+	def start_stop_sweep( self, input ):
+		'''
+		True to start, False to stop.
+		'''
+		if input == True:
+			output = 'S1'
+		else:
+			output = 'S0'
+		output = _write_command( output )
+		return output
+
+	def start_sweep_partway( self, input='1' ):
+		'''
+		Start a sweep at step n, where n in the range 2-32.
+		'''
+		output = 'S' + input
+		output = _write_command( output )
+		return output
+
+	def set_temperature( self, input='20.00' ):
+		'''
+		Set target temperature.
+		'''
+		output = 'T' + input
+		output = _write_command( output )
+		return output
 
 
 class System:
@@ -181,19 +302,20 @@ class System:
 
 	def _load_RAM( self, kilobytes=8 ):
 		output = 'Y'+str(kilobytes)
+		output = _write_command( output )
 		return output
 
 	def _dump_RAM( self, kilobytes=8 ):
 		output = 'Z'+str(kilobytes)
+		output = _write_command( output )
 		return output
 
-	def _store_RAM_to_EEPROM( self, kilobytes=8 ):
-		output = '~'
-		return output
+	def _store_RAM_to_EEPROM( self ):
+		return _write_command( '~' )
 
-	def _set_isobus_address():
-		# section 10.5 of manual
-		return
+	#def _set_isobus_address():
+	#	# section 10.5 of manual
+	#	return
 
 class Specialist:
 	'''
@@ -223,28 +345,28 @@ class Specialist:
 		return
 
 	def read_sweep_table( self ):
-		return 'r'
+		return _write_command( 'r' )
 
 	def wipe_sweep_table( self ):
-		return 'w'
+		return _write_command( 'w' )
 
 	def read_autopid_table( self ):
-		return 'q'
+		return _write_command( 'q' )
 
 	def read_x_pointer(self):
-		return 't'
+		return _write_command( 't' )
 
 	def read_gas_flow_params(self):
-		return 'd'
+		return _write_command( 'd' )
 
 	def read_flow_control(self):
-		return 'm'
+		return _write_command( 'm' )
 
 	def read_target_voltage(self):
-		return 'n'
+		return write_command( 'n' )
 
 	def read_valve_scaling(self):
-		return 'o'
+		return write_command( 'o' )
 
 	def set_pointer( self, type, value ):
 		'''
@@ -254,32 +376,39 @@ class Specialist:
 			0 to 128
 		'''
 		output = type + string
+		output = write_command( output )
 		return output
 
-	def set_sweep_table(self):
-		return
+	#def set_sweep_table(self):
+	#	return
 
-	def set_autopid_table(self):
-		return
+	#def set_autopid_table(self):
+	#	return
 
-	def set_heater_voltage_table(self):
-		return
+	#def set_heater_voltage_table(self):
+	#	return
 
 
 class ICT503( Monitor, Control, System ):
 	'''
 	Child class for ICT503.
 	'''
-	def __init__( self):
-		print('Init ICR503.\n')
+	def __init__( self ):
+		print('Init ICT503.\n')
 		return
 
+
+# Some functions for common tasks.
+def change_set_temperature( comdevice, comport, temp='20.00' ):
+	comstring = comdevice.set_temperature( temp )
+	comport.write_port( comstring )
+	return
+
 # Main script here.
+comdevice = ICT503()
+comport = SerialComms()
 
-device = ICT503()
-
-comms = SerialComms()
-
-comms.test_ports()
+#comstring = comdevice.set_temperature('30.00')
+#print(comstring)
 
 # End of script.
