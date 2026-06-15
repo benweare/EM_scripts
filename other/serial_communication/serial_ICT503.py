@@ -7,6 +7,7 @@ Communicates over RS232 or GPIB interface, using PySerial.
 '''
 
 import serial as serial
+from time import sleep
 
 class SerialComms:
 	'''
@@ -24,36 +25,40 @@ class SerialComms:
 		write_timeout=wtout,\
 		bytesize=serial.EIGHTBITS,\
 		parity=serial.PARITY_NONE )
-		print('Serial port: ' + serial_port.name + '\n') #confirm which port is used
+		print('Opened port: ' + self.serial_port.name + '\n') #confirm which port is used
 		return
 
 	def write_port( self, command ):
 		self.serial_port.reset_input_buffer()
 		self.serial_port.reset_output_buffer()
-		command.encode('utf-8')
+		command = bytes(command.encode('utf-8'))
 		self.serial_port.write( command )
+		print('Sent: '+str(command))
 		return
 
-		#ser.reset_input_buffer() #clear input queue
-		#ser.reset_output_buffer() #clear output buffer
-		#ser.close() #close port
+	def read_port( self ):
+		message = self.serial_port.readline()
+		print( 'Reply: ' + str(message.decode('utf-8')) )
+		return
 
 	def test_ports( self ):
 		from serial.tools import list_ports
-		print(list_ports.comports())
+		ports = list_ports.comports()
+		print( ports[0] )
 		return
 
 	def close_port( self ):
 		self.serial_port.close( )
+		print('Port closed.')
 		return
 
 
 # Function to write the commands into the correct syntax.
 def _write_command( input, noreply=True ):
 	if noreply == True:
-		output = '$' + input + r'\r'
+		output = '$' + input + '\r'
 	if noreply == False:
-		output = + input + r'\r'
+		output = input + '\r'
 	return output
 
 
@@ -111,7 +116,7 @@ class Monitor:
 		11-13 Channels 1,2, and 3 Freq/4
 		'''
 		output = 'R' + mode
-		output = _write_command( output )
+		output = _write_command( output, False )
 		return output
 
 	def set_unlock( self, mode ):
@@ -137,7 +142,8 @@ class Monitor:
 		return output
 
 	def read_version( self ):
-		return _write_command('V')
+		output = _write_command('V', False)
+		return output
 
 	def set_wait( self, delay='1000' ):
 		'''
@@ -404,11 +410,24 @@ def change_set_temperature( comdevice, comport, temp='20.00' ):
 	comport.write_port( comstring )
 	return
 
+def read_temperature_variables( comdevice, comport ):#
+	comport.write_port( comdevice.read_variable('0') )
+	comport.read_port()
+	comport.write_port( comdevice.read_variable('1') )
+	comport.read_port()
+	return
+
 # Main script here.
 comdevice = ICT503()
-comport = SerialComms()
+COM3 = SerialComms()
 
-#comstring = comdevice.set_temperature('30.00')
-#print(comstring)
-
+# Open COM port.
+COM3.open_port()
+# Set to remote operation.
+COM3.write_port(comdevice.set_control('remote', False))
+# Change the set temperature.
+change_set_temperature( comdevice, COM3, '20.00' )
+read_temperature_variables( comdevice, COM3 )
+# Close COM port.
+COM3.close_port()
 # End of script.
