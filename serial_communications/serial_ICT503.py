@@ -89,7 +89,7 @@ class Monitor:
 		if mode == 'remote' and locked == True:
 			command = 'C1'
 		if mode == 'local' and locked == False:
-			output = 'C2'
+			command = 'C2'
 		if mode == 'remote' and locked == False:
 			command = 'C3'
 		output = _write_command( command )
@@ -427,7 +427,10 @@ COM3.open_port()
 COM3.write_port(comdevice.set_control('remote', False))
 # Change the set temperature.
 change_set_temperature( comdevice, COM3, '20.00' )
+# Read back the current and set temperature.
 read_temperature_variables( comdevice, COM3 )
+# Set to local control.
+COM3.write_port(comdevice.set_control('local', False))
 # Close COM port.
 COM3.close_port()
 # End of script.
