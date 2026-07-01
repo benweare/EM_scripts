@@ -1,13 +1,27 @@
 '''
+ Class to communicate with an Oxford Instruments ICT503 temperature controller.
 
-Script to communicate with an Oxford Instruments ICT503.
+ Communicates over RS232 or GPIB interface, using PySerial. See ICT503 user
+ manual for full explanation of the API and operational details.
 
-Communicates over RS232 or GPIB interface, using PySerial. 
-
+ Author: E Weare
+ Contact: benjamin.weare1@nottingham.ac.uk
+ Location: nmRC
 '''
 
 import serial as serial
 from time import sleep
+
+class AccessError(Exception):
+	'''
+	Exception raised when accessing functions that may damage the controller if
+	not used correctly.
+	'''
+
+	def __init__(self, message):
+		self.message = message
+		super().__init__(self.message)
+		return
 
 class SerialComms:
 	'''
@@ -18,6 +32,9 @@ class SerialComms:
 		return
 
 	def open_port( self, pname='COM3', brate=9600, tout=2, wtout=2 ):
+		'''
+		Open the COM port (wrapper around serial.Serial).
+		'''
 		self.serial_port = serial.Serial(\
 		port=pname,\
 		baudrate=brate,\
@@ -29,6 +46,9 @@ class SerialComms:
 		return
 
 	def write_port( self, command ):
+		'''
+		Write to the port.
+		'''
 		self.serial_port.reset_input_buffer()
 		self.serial_port.reset_output_buffer()
 		command = bytes(command.encode('utf-8'))
@@ -37,17 +57,34 @@ class SerialComms:
 		return
 
 	def read_port( self ):
+		'''
+		Read the port and print the answer.
+		'''
 		message = self.serial_port.readline()
 		print( 'Reply: ' + str(message.decode('utf-8')) )
 		return
 
+	def get_readout( self ):
+		'''
+		Read the port and return answer as a string.
+		'''
+		readout = self.serial_port.readline()
+		readout = str(message.decode('utf-8'))
+		return readout
+
 	def test_ports( self ):
+		'''
+		Print the first availble COM port.
+		'''
 		from serial.tools import list_ports
 		ports = list_ports.comports()
 		print( ports[0] )
 		return
 
 	def close_port( self ):
+		'''
+		Close the COM port.
+		'''
 		self.serial_port.close( )
 		print('Port closed.')
 		return
@@ -70,19 +107,22 @@ class Monitor:
 
 	API
 	---
-	Cn   SET CONTROL LOCAL/REMOTE/LOCK 
-	Qn   DEFINE COMMUNICATION PROTOCOL
-	Rn   READ PARAMETER n 
-	Unnnnn UNLOCK FOR "!" AND SYSTEM COMMANDS 
-	V READ VERSION 
-	Wnnnn SET WAIT INTERVAL BETWEEN OUTPUT CHARACTERS 
-	X EXAMINE STATUS
+	Cn     : SET CONTROL LOCAL/REMOTE/LOCK 
+	Qn     : DEFINE COMMUNICATION PROTOCOL
+	Rn     : READ PARAMETER n 
+	Unnnnn : UNLOCK FOR "!" AND SYSTEM COMMANDS 
+	V READ : VERSION 
+	Wnnnn  : SET WAIT INTERVAL BETWEEN OUTPUT CHARACTERS 
+	X      : EXAMINE STATUS
 
 	'''
 	def __init__( self ):
 		return
 
 	def set_control( self, mode, locked ):
+		'''
+		Set control mode.
+		'''
 		mode = mode.lower()
 		if mode == 'local' and locked == True:
 			command = 'C0'
@@ -96,6 +136,8 @@ class Monitor:
 		return output
 
 	def set_comm_protocol( self, mode ):
+		'''
+		'''
 		mode = mode.lower()
 		if mode == 'normal':
 			output = 'Q0'
@@ -107,24 +149,37 @@ class Monitor:
 	def read_variable( self, mode='0' ):
 		'''
 		Read a variable from 0 to 13.
-		0 Set temperature
-		1-3 Sensor temperature
-		4 Temperature error
-		5-6 Heater OP (%, volts)
-		7 Gas flow OP
-		8-10 P, I, D
-		11-13 Channels 1,2, and 3 Freq/4
+
+		Notes
+		-----
+		0     : Set temperature
+		1-3   : Sensor temperature
+		4     : Temperature error
+		5-6   : Heater OP (%, volts)
+		7     : Gas flow OP
+		8-10  : P, I, D
+		11-13 : Channels 1,2, and 3 Freq/4
 		'''
 		output = 'R' + mode
 		output = _write_command( output, False )
 		return output
 
-	def set_unlock( self, mode ):
+	def set_unlock( self, mode, **kwargs ):
 		'''
-		Warning: these may erase memory values. Do not use unless you
-		are confident. 
+		Warning:
+		-------- 
+		These may erase memory values. Do not use unless you
+		are confident. See ICT503 manual for details.
 		'''
+		are_you_sure = kwargs.get('are_you_sure', False)
 		mode = mode.lower()
+		if are_you_sure == False:
+			# Safety measure.
+			error = AccessError('Using this function may erase controller\
+				memory,see ICTO503 manual for details. Pass are_you_sure=True\
+				to enable use of these commands.')
+			print(error)
+			return
 		if mode == 'default':
 			output = 'U0'
 		if mode == '!':
@@ -142,6 +197,8 @@ class Monitor:
 		return output
 
 	def read_version( self ):
+		'''
+		'''
 		output = _write_command('V', False)
 		return output
 
@@ -163,24 +220,26 @@ class Control:
 
 	API
 	---
-	An   SET AUTO/MAN FOR HEATER & GAS 
-	Dnnnn SET DERIVATIVE ACTION TIME 
-	Fn   SET FRONT PANEL TO DISPLAY PARAMETER n 
-	Gnnn SET GAS FLOW (in MANUAL only) 
-	Hn   SET SENSOR FOR HEATER CONTROL 
-	Innnn SET INTEGRAL ACTION TIME 
-	Ln SET AUTO-PID (Learned PID's) 
-	Mnnn SET MAXIMUM HEATER VOLTS LIMIT 
-	Onnn SET OUTPUT VOLTS (in MANUAL only) 
-	nnnn SET PROPORTIONAL BAND 
-	Sn START/STOP SWEEP 
-	Tnnnnn SET DESIRED TEMPERATURE
-
+	An     : SET AUTO/MAN FOR HEATER & GAS 
+	Dnnnn  : SET DERIVATIVE ACTION TIME 
+	Fn     : SET FRONT PANEL TO DISPLAY PARAMETER n 
+	Gnnn   : SET GAS FLOW (in MANUAL only) 
+	Hn     : SET SENSOR FOR HEATER CONTROL 
+	Innnn  : SET INTEGRAL ACTION TIME 
+	Ln     : SET AUTO-PID (Learned PID's) 
+	Mnnn   : SET MAXIMUM HEATER VOLTS LIMIT 
+	Onnn   : SET OUTPUT VOLTS (in MANUAL only) 
+	nnnn   : SET PROPORTIONAL BAND 
+	Sn     : START/STOP SWEEP 
+	Tnnnnn : SET DESIRED TEMPERATURE
 	'''
 	def __init__( self ):
 		return
 
 	def set_control( self, heater, gas ):
+		'''
+		Set control of heater and gas to manual or auto.
+		'''
 		heater = heater.lower()
 		gas = gas.lower()
 		if heater == 'manual' and gas == 'manual':
@@ -195,16 +254,25 @@ class Control:
 		return output
 
 	def set_P( self, input ):
+		'''
+		Set controller Proportional.
+		'''
 		output = 'P'+input
 		output = _write_command( output )
 		return output
 
 	def set_I( self, input  ):
+		'''
+		Set controller Integral.
+		'''
 		output = 'I'+input
 		output = _write_command( output )
 		return output
 
 	def set_D( self, input  ):
+		'''
+		Set controller Derviative.
+		'''
 		output = 'D'+input
 		output = _write_command( output )
 		return output
@@ -213,13 +281,16 @@ class Control:
 		'''
 		Set front panel to output a parameter other than temperature.
 
-		Same syntax as 'R' command, Monitor.read_variable().
+		Same syntax as 'R' command, Monitor.read_variable.
 		'''
 		output = 'F' + input
 		output = _write_command( output )
 		return output
 
 	def set_gas_flow( self, input ):
+		'''
+		Set gas flow rate.
+		'''
 		output = 'G' + input
 		output = _write_command( output )
 		return output
@@ -297,10 +368,10 @@ class System:
 
 	API
 	---
-	Y LOAD ENTIRE RAM CONTENTS 
-	Z DUMP ENTIRE RAM CONTENTS
-	~ STORE RAM CONTENT TO EEPROM
-	! SET ISOBUS ADDRESS
+	Y : LOAD ENTIRE RAM CONTENTS 
+	Z : DUMP ENTIRE RAM CONTENTS
+	~ : STORE RAM CONTENT TO EEPROM
+	! : SET ISOBUS ADDRESS
 	'''
 
 	def __init__( self):
@@ -323,6 +394,7 @@ class System:
 	#	# section 10.5 of manual
 	#	return
 
+
 class Specialist:
 	'''
 	Class to contain serial communication commands.
@@ -331,50 +403,50 @@ class Specialist:
 
 	API
 	---
-	xnnn SET TABLE POINTER x to nnn
-	ynnn SET TABLE POINTER y to nnn 
-	snnnnn PROGRAM SWEEP TABLE 
-	r READ SWEEP TABLE 
-	w WIPE SWEEP TABLE
-	pnnn PROGRAM AUTO PID TABLE PID
-	q READ AUTO PID TABLE PID
-	vnnn PROGRAM CUSTOM TARGET VOLTAGE TABLE
-	t READ VALUE FROM TARGET VOLTAGE TABLE
-	cnnn SET GAS FLOW CONFIGURATION PARAMETER
-	d READ GAS FLOW CONFIGURATION PARAMETER
-	m READ GAS FLOW CONTROL STATUS
-	n READ TARGET VOLTS
-	o READ VALVE SCALING
+	xnnn   : SET TABLE POINTER x to nnn
+	ynnn   : SET TABLE POINTER y to nnn 
+	snnnnn : PROGRAM SWEEP TABLE 
+	r READ : SWEEP TABLE 
+	w WIPE : SWEEP TABLE
+	pnnn   : PROGRAM AUTO PID TABLE PID
+	q      : READ AUTO PID TABLE PID
+	vnnn   : PROGRAM CUSTOM TARGET VOLTAGE TABLE
+	t      : READ VALUE FROM TARGET VOLTAGE TABLE
+	cnnn   : SET GAS FLOW CONFIGURATION PARAMETER
+	d      : READ GAS FLOW CONFIGURATION PARAMETER
+	m      : READ GAS FLOW CONTROL STATUS
+	n      : READ TARGET VOLTS
+	o      : READ VALVE SCALING
 	'''
 
 	def __init__( self ):
 		return
 
-	def read_sweep_table( self ):
+	def _read_sweep_table( self ):
 		return _write_command( 'r' )
 
-	def wipe_sweep_table( self ):
+	def _wipe_sweep_table( self ):
 		return _write_command( 'w' )
 
-	def read_autopid_table( self ):
+	def _read_autopid_table( self ):
 		return _write_command( 'q' )
 
-	def read_x_pointer(self):
+	def _read_x_pointer(self):
 		return _write_command( 't' )
 
-	def read_gas_flow_params(self):
+	def _read_gas_flow_params(self):
 		return _write_command( 'd' )
 
-	def read_flow_control(self):
+	def _read_flow_control(self):
 		return _write_command( 'm' )
 
-	def read_target_voltage(self):
+	def _read_target_voltage(self):
 		return write_command( 'n' )
 
-	def read_valve_scaling(self):
+	def _read_valve_scaling(self):
 		return write_command( 'o' )
 
-	def set_pointer( self, type, value ):
+	def _set_pointer( self, type, value ):
 		'''
 		type : string
 			x, or y. 
@@ -395,7 +467,7 @@ class Specialist:
 	#	return
 
 
-class ICT503( Monitor, Control, System ):
+class ICT503( Monitor, Control ):
 	'''
 	Child class for ICT503.
 	'''
@@ -406,16 +478,36 @@ class ICT503( Monitor, Control, System ):
 
 # Some functions for common tasks.
 def change_set_temperature( comdevice, comport, temp='20.00' ):
+	'''
+	Change the set temperature.
+	'''
 	comstring = comdevice.set_temperature( temp )
 	comport.write_port( comstring )
 	return
 
-def read_temperature_variables( comdevice, comport ):#
+def read_temperature_variables( comdevice, comport ):
+	'''
+	Read the set and current temperature.
+	'''
 	comport.write_port( comdevice.read_variable('0') )
 	comport.read_port()
 	comport.write_port( comdevice.read_variable('1') )
 	comport.read_port()
 	return
+
+def readout_continuous( comdevice, comport, readings=1000 ):
+	'''
+	Get temperature readings continuously.
+	'''
+	try:
+		while x < readings:
+			comport.write_port( comdevice.read_variable('0') )
+			x + x + 1
+			sleep( 1 )
+	except KeyboardInterrupt:
+		print('User interrupt.')
+	return
+
 
 # Main script here.
 comdevice = ICT503()
