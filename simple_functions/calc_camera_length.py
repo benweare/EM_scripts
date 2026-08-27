@@ -1,5 +1,9 @@
 '''
 Function to calculate camera length in SAED.
+
+ Camera | Pixel size (um)
+  K3    | 5
+OneView | 15
 '''
 
 def calculate_camera_length( distance, lamb, size ):# d = wL/R
@@ -10,5 +14,5 @@ def calculate_camera_length( distance, lamb, size ):# d = wL/R
     length = (d * R) / w
     return length
 
-length = calculate_camera_length( 0.058422, 0.00251, 15 )
+length = calculate_camera_length( 0.049546, 0.00251, 5 )
 print( 'camera length = ' + str(length*1000) + ' mm' + '\n' )
